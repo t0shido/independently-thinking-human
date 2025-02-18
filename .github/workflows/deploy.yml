@@ -23,7 +23,8 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.INSTANCE_IP }} >> ~/.ssh/known_hosts
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+          ssh-keyscan -H ${{ secrets.INSTANCE_IP }} >> ~/.ssh/known_hosts
 
       - name: Build and deploy
         env:
@@ -35,10 +36,16 @@ jobs:
           # Save the image to a tar file
           docker save independently-thinking-human:latest > image.tar
           
+          # Debug SSH connection
+          echo "Testing SSH connection..."
+          ssh -v ubuntu@${INSTANCE_IP} "echo 'SSH connection successful'"
+          
           # Copy the image to the server
-          scp image.tar ubuntu@${INSTANCE_IP}:~/image.tar
+          echo "Copying image to server..."
+          scp -v image.tar ubuntu@${INSTANCE_IP}:~/image.tar
           
           # Deploy using SSH
+          echo "Deploying container..."
           ssh ubuntu@${INSTANCE_IP} << 'ENDSSH'
             # Load the image
             docker load < image.tar
