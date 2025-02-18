@@ -41,28 +41,43 @@ jobs:
           aws sts get-caller-identity
           echo "AWS credentials verified"
 
+      - name: Create Lightsail container service if not exists
+        run: |
+          echo "Checking if container service exists..."
+          SERVICES=$(aws lightsail get-container-services | jq -r '.containerServices[].serviceName')
+          if [[ ! $SERVICES == *"independently-thinking-human"* ]]; then
+            echo "Creating container service..."
+            aws lightsail create-container-service \
+              --service-name independently-thinking-human \
+              --power small \
+              --scale 1
+            echo "Waiting for container service to be ready..."
+            aws lightsail wait container-service-stable \
+              --service-name independently-thinking-human
+          fi
+
       - name: Build and push to Lightsail
         run: |
           echo "Starting deployment to Lightsail..."
           
-          echo "Getting container service info..."
-          aws lightsail get-container-services
-
           echo "Building Docker image..."
-          docker build -t independently-thinking-human .
+          docker build -t independently-thinking-human:latest .
           
           echo "Pushing to Lightsail..."
           aws lightsail push-container-image \
             --service-name independently-thinking-human \
-            --label independently-thinking-human \
-            --image-name independently-thinking-human
+            --label latest \
+            --image independently-thinking-human:latest
 
+          # Get the image name from the push command output
+          IMAGE_TAG=$(aws lightsail get-container-images --service-name independently-thinking-human | jq -r '.containerImages[0].image')
+          
           echo "Creating container deployment..."
           aws lightsail create-container-service-deployment \
             --service-name independently-thinking-human \
             --containers '{
-              "independently-thinking-human": {
-                "image": ":independently-thinking-human.independently-thinking-human.latest",
+              "app": {
+                "image": "'"$IMAGE_TAG"'",
                 "ports": {
                   "80": "HTTP",
                   "443": "HTTPS"
@@ -70,11 +85,15 @@ jobs:
               }
             }' \
             --public-endpoint '{
-              "containerName": "independently-thinking-human",
+              "containerName": "app",
               "containerPort": 80,
               "healthCheck": {
                 "path": "/"
               }
             }'
+          
+          echo "Waiting for deployment to complete..."
+          aws lightsail wait container-service-stable \
+            --service-name independently-thinking-human
           
           echo "Deployment completed successfully"
