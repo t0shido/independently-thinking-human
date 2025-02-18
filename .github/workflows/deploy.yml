@@ -19,35 +19,43 @@ jobs:
 
       - name: Install AWS CLI
         run: |
+          echo "Installing AWS CLI..."
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install
+          echo "AWS CLI installed successfully"
 
       - name: Configure AWS credentials
         run: |
+          echo "Configuring AWS credentials..."
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_DEFAULT_REGION
+          echo "AWS credentials configured"
 
       - name: Verify AWS credentials
         run: |
+          echo "Verifying AWS credentials..."
           aws sts get-caller-identity
+          echo "AWS credentials verified"
 
       - name: Build and push to Lightsail
         run: |
-          # Get container service info
+          echo "Starting deployment to Lightsail..."
+          
+          echo "Getting container service info..."
           aws lightsail get-container-services
 
-          # Build the Docker image
+          echo "Building Docker image..."
           docker build -t independently-thinking-human .
           
-          # Push to Lightsail
+          echo "Pushing to Lightsail..."
           aws lightsail push-container-image \
             --service-name independently-thinking-human \
             --label independently-thinking-human \
             --image-name independently-thinking-human
 
-          # Deploy the container
+          echo "Creating container deployment..."
           aws lightsail create-container-service-deployment \
             --service-name independently-thinking-human \
             --containers '{
@@ -66,3 +74,5 @@ jobs:
                 "path": "/"
               }
             }'
+          
+          echo "Deployment completed successfully"
