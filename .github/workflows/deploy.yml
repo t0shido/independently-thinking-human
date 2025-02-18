@@ -51,9 +51,16 @@ jobs:
               --service-name independently-thinking-human \
               --power small \
               --scale 1
+            
             echo "Waiting for container service to be ready..."
-            aws lightsail wait container-service-stable \
-              --service-name independently-thinking-human
+            while true; do
+              STATUS=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].state')
+              echo "Current status: $STATUS"
+              if [ "$STATUS" = "RUNNING" ]; then
+                break
+              fi
+              sleep 10
+            done
           fi
 
       - name: Build and push to Lightsail
@@ -93,7 +100,15 @@ jobs:
             }'
           
           echo "Waiting for deployment to complete..."
-          aws lightsail wait container-service-stable \
-            --service-name independently-thinking-human
+          while true; do
+            STATUS=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].state')
+            echo "Current status: $STATUS"
+            if [ "$STATUS" = "RUNNING" ]; then
+              break
+            fi
+            sleep 10
+          done
           
           echo "Deployment completed successfully"
+          URL=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].url')
+          echo "Application is available at: $URL"
