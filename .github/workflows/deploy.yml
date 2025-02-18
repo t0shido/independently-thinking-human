@@ -41,37 +41,43 @@ jobs:
           aws sts get-caller-identity
           echo "AWS credentials verified"
 
-      - name: Check and prepare container service
+      - name: Build Docker image
         run: |
-          echo "Checking container service status..."
-          SERVICE_STATUS=$(aws lightsail get-container-services | jq -r '.containerServices[] | select(.containerServiceName=="independently-thinking-human") | .state')
+          echo "Building Docker image..."
+          docker build -t independently-thinking-human:latest .
+          echo "Docker image built successfully"
+
+      - name: Deploy to Lightsail
+        run: |
+          echo "Starting deployment process..."
           
-          if [ "$SERVICE_STATUS" = "RUNNING" ]; then
-            echo "Container service exists and is running"
-          else
-            echo "Creating new container service..."
-            aws lightsail create-container-service \
-              --service-name independently-thinking-human \
-              --power small \
-              --scale 1
-            
-            echo "Waiting for container service to be ready..."
+          # Function to wait for service to be in RUNNING state
+          wait_for_running() {
             while true; do
-              STATUS=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].state')
+              STATUS=$(aws lightsail get-container-services | jq -r '.containerServices[] | select(.containerServiceName=="independently-thinking-human") | .state')
               echo "Current status: $STATUS"
               if [ "$STATUS" = "RUNNING" ]; then
                 break
               fi
               sleep 10
             done
-          fi
-
-      - name: Build and push to Lightsail
-        run: |
-          echo "Starting deployment to Lightsail..."
+          }
           
-          echo "Building Docker image..."
-          docker build -t independently-thinking-human:latest .
+          # Check if service exists
+          SERVICE_EXISTS=$(aws lightsail get-container-services | jq -r '.containerServices[] | select(.containerServiceName=="independently-thinking-human") | .containerServiceName')
+          
+          if [ -z "$SERVICE_EXISTS" ]; then
+            echo "Creating new container service..."
+            aws lightsail create-container-service \
+              --service-name independently-thinking-human \
+              --power small \
+              --scale 1
+            
+            echo "Waiting for service to be ready..."
+            wait_for_running
+          else
+            echo "Container service already exists"
+          fi
           
           echo "Pushing to Lightsail..."
           aws lightsail push-container-image \
@@ -103,14 +109,7 @@ jobs:
             }'
           
           echo "Waiting for deployment to complete..."
-          while true; do
-            STATUS=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].state')
-            echo "Current status: $STATUS"
-            if [ "$STATUS" = "RUNNING" ]; then
-              break
-            fi
-            sleep 10
-          done
+          wait_for_running
           
           echo "Deployment completed successfully"
           URL=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].url')
