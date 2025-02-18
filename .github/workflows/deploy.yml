@@ -41,12 +41,15 @@ jobs:
           aws sts get-caller-identity
           echo "AWS credentials verified"
 
-      - name: Create Lightsail container service if not exists
+      - name: Check and prepare container service
         run: |
-          echo "Checking if container service exists..."
-          SERVICES=$(aws lightsail get-container-services | jq -r '.containerServices[].serviceName')
-          if [[ ! $SERVICES == *"independently-thinking-human"* ]]; then
-            echo "Creating container service..."
+          echo "Checking container service status..."
+          SERVICE_STATUS=$(aws lightsail get-container-services | jq -r '.containerServices[] | select(.containerServiceName=="independently-thinking-human") | .state')
+          
+          if [ "$SERVICE_STATUS" = "RUNNING" ]; then
+            echo "Container service exists and is running"
+          else
+            echo "Creating new container service..."
             aws lightsail create-container-service \
               --service-name independently-thinking-human \
               --power small \
