@@ -19,16 +19,42 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
-      - name: Install AWS Lightsail CLI
+      - name: Install AWS CLI
         run: |
-          curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "lightsailctl"
-          sudo mv "lightsailctl" "/usr/local/bin/lightsailctl"
-          sudo chmod +x /usr/local/bin/lightsailctl
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
 
       - name: Build and push to Lightsail
         run: |
+          # Get container service info
+          aws lightsail get-container-services
+
+          # Build the Docker image
           docker build -t independently-thinking-human .
+          
+          # Push to Lightsail
           aws lightsail push-container-image \
             --service-name independently-thinking-human \
             --label independently-thinking-human \
             --image-name independently-thinking-human
+
+          # Deploy the container
+          aws lightsail create-container-service-deployment \
+            --service-name independently-thinking-human \
+            --containers '{
+              "independently-thinking-human": {
+                "image": ":independently-thinking-human.independently-thinking-human.latest",
+                "ports": {
+                  "80": "HTTP",
+                  "443": "HTTPS"
+                }
+              }
+            }' \
+            --public-endpoint '{
+              "containerName": "independently-thinking-human",
+              "containerPort": 80,
+              "healthCheck": {
+                "path": "/"
+              }
+            }'
