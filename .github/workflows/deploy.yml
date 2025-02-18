@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install AWS CLI
+      - name: Install AWS CLI and Lightsail plugin
         run: |
           echo "Installing AWS CLI..."
           sudo apt-get update && sudo apt-get install -y unzip
@@ -26,6 +26,11 @@ jobs:
           sudo ./aws/install --update
           aws --version
           echo "AWS CLI installed successfully"
+          
+          echo "Installing Lightsail plugin..."
+          sudo curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "/usr/local/bin/lightsailctl"
+          sudo chmod +x /usr/local/bin/lightsailctl
+          echo "Lightsail plugin installed successfully"
 
       - name: Configure AWS credentials
         run: |
