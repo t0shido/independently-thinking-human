@@ -9,6 +9,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: eu-central-1
+  INSTANCE_NAME: independently-thinking-human
 
 jobs:
   deploy:
@@ -17,105 +18,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install AWS CLI and Lightsail plugin
+      - name: Set up SSH key
         run: |
-          echo "Installing AWS CLI..."
-          sudo apt-get update && sudo apt-get install -y unzip
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip -q awscliv2.zip
-          sudo ./aws/install --update
-          aws --version
-          echo "AWS CLI installed successfully"
-          
-          echo "Installing Lightsail plugin..."
-          sudo curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "/usr/local/bin/lightsailctl"
-          sudo chmod +x /usr/local/bin/lightsailctl
-          echo "Lightsail plugin installed successfully"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.INSTANCE_IP }} >> ~/.ssh/known_hosts
 
-      - name: Configure AWS credentials
+      - name: Build and deploy
+        env:
+          INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
         run: |
-          echo "Configuring AWS credentials..."
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region $AWS_DEFAULT_REGION
-          echo "AWS credentials configured"
-
-      - name: Verify AWS credentials
-        run: |
-          echo "Verifying AWS credentials..."
-          aws sts get-caller-identity
-          echo "AWS credentials verified"
-
-      - name: Build Docker image
-        run: |
-          echo "Building Docker image..."
+          # Build the Docker image
           docker build -t independently-thinking-human:latest .
-          echo "Docker image built successfully"
-
-      - name: Deploy to Lightsail
-        run: |
-          echo "Starting deployment process..."
           
-          # Function to wait for service to be in RUNNING state
-          wait_for_running() {
-            while true; do
-              STATUS=$(aws lightsail get-container-services | jq -r '.containerServices[] | select(.containerServiceName=="independently-thinking-human") | .state')
-              echo "Current status: $STATUS"
-              if [ "$STATUS" = "RUNNING" ]; then
-                break
-              fi
-              sleep 10
-            done
-          }
+          # Save the image to a tar file
+          docker save independently-thinking-human:latest > image.tar
           
-          # Check if service exists
-          SERVICE_EXISTS=$(aws lightsail get-container-services | jq -r '.containerServices[] | select(.containerServiceName=="independently-thinking-human") | .containerServiceName')
+          # Copy the image to the server
+          scp image.tar ubuntu@${INSTANCE_IP}:~/image.tar
           
-          if [ -z "$SERVICE_EXISTS" ]; then
-            echo "Creating new container service..."
-            aws lightsail create-container-service \
-              --service-name independently-thinking-human \
-              --power small \
-              --scale 1
+          # Deploy using SSH
+          ssh ubuntu@${INSTANCE_IP} << 'ENDSSH'
+            # Load the image
+            docker load < image.tar
             
-            echo "Waiting for service to be ready..."
-            wait_for_running
-          else
-            echo "Container service already exists"
-          fi
-          
-          echo "Pushing to Lightsail..."
-          aws lightsail push-container-image \
-            --service-name independently-thinking-human \
-            --label latest \
-            --image independently-thinking-human:latest
-
-          # Get the image name from the push command output
-          IMAGE_TAG=$(aws lightsail get-container-images --service-name independently-thinking-human | jq -r '.containerImages[0].image')
-          
-          echo "Creating container deployment..."
-          aws lightsail create-container-service-deployment \
-            --service-name independently-thinking-human \
-            --containers '{
-              "app": {
-                "image": "'"$IMAGE_TAG"'",
-                "ports": {
-                  "80": "HTTP",
-                  "443": "HTTPS"
-                }
-              }
-            }' \
-            --public-endpoint '{
-              "containerName": "app",
-              "containerPort": 80,
-              "healthCheck": {
-                "path": "/"
-              }
-            }'
-          
-          echo "Waiting for deployment to complete..."
-          wait_for_running
-          
-          echo "Deployment completed successfully"
-          URL=$(aws lightsail get-container-services --service-name independently-thinking-human | jq -r '.containerServices[0].url')
-          echo "Application is available at: $URL"
+            # Stop existing container if it exists
+            docker stop independently-thinking-human || true
+            docker rm independently-thinking-human || true
+            
+            # Run the new container
+            docker run -d \
+              --name independently-thinking-human \
+              --restart unless-stopped \
+              -p 80:80 \
+              -p 443:443 \
+              independently-thinking-human:latest
+            
+            # Clean up
+            rm image.tar
+          ENDSSH
