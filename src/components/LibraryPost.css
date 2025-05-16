@@ -1,0 +1,303 @@
+.library-post {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-top: 15rem;
+  color: var(--primary-color);
+  position: relative;
+}
+
+.library-post-content {
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+.library-post-content h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  line-height: 1.3;
+  font-family: 'Crimson Text', serif;
+}
+
+.library-post-content p {
+  margin-bottom: 1.5rem;
+}
+
+.library-post-image {
+  margin: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.library-post-image img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+/* Mobile styles for 16:9 aspect ratio */
+@media screen and (max-width: 768px) {
+  .book-card.horizontal.mobile-view {
+    margin-top: 1 rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .book-card.horizontal.mobile-view:not(:first-child) {
+    margin-top: 0.5rem;
+  }
+
+  .library-post-content {
+    margin-top: 1.5rem;
+  }
+
+  .library-post {
+    padding-top: 1.5rem;
+  }
+
+  .featured-section {
+    margin-top: 7rem;
+  }
+
+  .library-post.mobile-view {
+    padding: 16px 8px;
+  width: 95%;
+  max-width: 95%;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+    margin-top: 5rem !important;
+  }
+
+  .library-post-image {
+    margin: 1rem -14px;
+    position: relative;
+    width: calc(100% + 28px);
+    padding-top: 70%; /* Increased from 56.25% to show more of the image */
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .book-card.horizontal.mobile-view .book-cover {
+    min-height: 140px;
+  }
+
+  .library-post-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-position: center;
+    object-fit: cover;
+  }
+
+  /* Preview card images in 16:9 */
+  .book-card.mobile-view .book-cover {
+    padding-top: 56.25%;
+    height: 0 !important;
+    position: relative;
+  }
+
+  .book-card.mobile-view .book-cover img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Preview card styles */
+.book-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  display: flex;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Mobile styles */
+.book-card.horizontal.mobile-view {
+  display: flex;
+  flex-direction: column;
+  height: auto !important;
+  margin-bottom: 0;
+}
+
+.book-card.horizontal.mobile-view .book-cover {
+  height: 220px !important;
+  width: 100% !important;
+  margin-bottom: 0.5rem;
+}
+
+.book-card.mobile-view .card-content {
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.book-card.mobile-view .card-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.book-card.mobile-view .card-content p {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.library-post.mobile-view {
+  padding: 16px 8px;
+  width: 95%;
+  max-width: 95%;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.library-post.mobile-view .library-post-content {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.library-post.mobile-view .library-post-content h1 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.library-post.mobile-view .library-post-content p {
+  margin-bottom: 1.25rem;
+}
+
+.library-post.mobile-view .library-post-image {
+  margin: 2rem -14px;
+  width: calc(100% + 28px);
+  border-radius: 12px;
+  overflow: hidden;
+  padding-top: 70%; /* Increased height to show more of the image */
+}
+
+.library-post.mobile-view .library-post-image img {
+  height: 100%;
+  border-radius: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-position: center;
+  object-fit: cover;
+}
+
+.book-card.horizontal {
+  height: 250px;
+  width: 100%;
+}
+
+.book-cover {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.book-card.large {
+  flex-direction: row;
+  height: 400px;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+}
+
+.book-cover {
+  flex: 0 0 33.333%;
+  height: 100%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.book-card.large .book-cover {
+  flex: 0 0 33.333%;
+  height: 100%;
+}
+
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.card-content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.metadata {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+  color: #666;
+}
+
+.metadata p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.card-content h2 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #666;
+}
+
+.card-content h3 {
+  margin: 10px 0;
+  font-size: 1.5em;
+}
+
+.card-content .description {
+  margin: 10px 0;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.card-content .author {
+  margin: 10px 0;
+  color: #999;
+  font-size: 0.9em;
+}
+
+.card-content .category {
+  color: #666;
+  font-size: 0.8em;
+}

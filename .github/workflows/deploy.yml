@@ -1,77 +1,36 @@
-name: Deploy to AWS Lightsail
+name: Deploy to Lightsail
 
 on:
   push:
-    branches:
-      - main
-
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: eu-central-1
-  INSTANCE_NAME: independently-thinking-human
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-          echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
-          
-          # Debug SSH key
-          echo "Checking SSH key format..."
-          head -n 1 ~/.ssh/id_rsa
-          tail -n 1 ~/.ssh/id_rsa
-          ls -l ~/.ssh/id_rsa
-          
-          # Add host to known hosts
-          ssh-keyscan -H ${{ secrets.INSTANCE_IP }} >> ~/.ssh/known_hosts
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build project
+        run: npm run build
 
-      - name: Test SSH Connection
-        run: |
-          echo "Testing SSH connection..."
-          ssh -i ~/.ssh/id_rsa -v ubuntu@${{ secrets.INSTANCE_IP }} "echo 'SSH connection test'"
-
-      - name: Build and deploy
-        env:
-          INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
-        run: |
-          # Build the Docker image
-          docker build -t independently-thinking-human:latest .
-          
-          # Save the image to a tar file
-          docker save independently-thinking-human:latest > image.tar
-          
-          # Copy the image to the server
-          echo "Copying image to server..."
-          scp -i ~/.ssh/id_rsa -v image.tar ubuntu@${INSTANCE_IP}:~/image.tar
-          
-          # Deploy using SSH
-          echo "Deploying container..."
-          ssh -i ~/.ssh/id_rsa ubuntu@${INSTANCE_IP} << 'ENDSSH'
-            # Load the image
-            docker load < image.tar
-            
-            # Stop existing container if it exists
-            docker stop independently-thinking-human || true
-            docker rm independently-thinking-human || true
-            
-            # Run the new container
-            docker run -d \
-              --name independently-thinking-human \
-              --restart unless-stopped \
-              -p 80:80 \
-              -p 443:443 \
-              independently-thinking-human:latest
-            
-            # Clean up
-            rm image.tar
-          ENDSSH
+      - name: Deploy to Lightsail
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT || 22 }}
+          script: |
+            cd /home/ubuntu/independently-thinking-human
+            git pull
+            npm ci
+            npm run build
+            pm2 restart independently-thinking-human || systemctl restart independently-thinking-human
