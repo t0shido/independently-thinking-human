@@ -397,3 +397,38 @@ body {
   line-height: 1.6;
   margin: 0;
 }
+
+.footer {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+  color: var(--secondary-color);
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.footer-content p {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+@media screen and (max-width: 768px) {
+  .footer {
+    padding: 3rem 1rem;
+  }
+  
+  .footer-content p {
+    font-size: 0.9rem;
+  }
+}
