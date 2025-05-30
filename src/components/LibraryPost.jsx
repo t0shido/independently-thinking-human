@@ -27,7 +27,18 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
                 objectPosition: 'center'
               }}
             />
-          ) : post.title === "The Mirror of the Mind" && (
+          ) : post.title === "The Wave and the Ocean" ? (
+            <img 
+              src={`/content/library/${section}/wave.png`}
+              alt="The Wave and the Ocean"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+            />
+          ) : post.title === "The Mirror of the Mind" ? (
             <img 
               src={mirrorImage}
               alt="Mindset"
@@ -38,7 +49,7 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
                 objectPosition: 'center'
               }}
             />
-          )}
+          ) : null}
           {!post.image && post.title === "Finding Direction" && (
             <img 
               src={purposeImage}
@@ -124,7 +135,18 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
                 objectPosition: 'center'
               }}
             />
-          ) : post.title === "The Mirror of the Mind" && (
+          ) : post.title === "The Wave and the Ocean" ? (
+            <img 
+              src={`/content/library/${section}/wave.png`}
+              alt="The Wave and the Ocean"
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+            />
+          ) : post.title === "The Mirror of the Mind" ? (
             <img 
               src={mirrorImage}
               alt="Mindset"
@@ -135,8 +157,8 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
                 objectPosition: 'center'
               }}
             />
-          )}
-          {!post.image && post.title === "Finding Direction" && (
+          ) : null}
+          {post.title === "Finding Direction" && !post.image && (
             <img 
               src={purposeImage}
               alt="Direction"

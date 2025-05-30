@@ -23,8 +23,10 @@ const LibrarySection = ({ section }) => {
       setError(null);
       try {
         const sectionPosts = await getSectionPosts(section);
-        // Move "Finding Direction" to the first position if it exists
+        // Move "The Wave and the Ocean" to the first position if it exists, followed by "Finding Direction"
         const reorderedPosts = sectionPosts.sort((a, b) => {
+          if (a.title === "The Wave and the Ocean") return -1;
+          if (b.title === "The Wave and the Ocean") return 1;
           if (a.title === "Finding Direction") return -1;
           if (b.title === "Finding Direction") return 1;
           return 0;
@@ -238,6 +240,15 @@ const Overview = () => {
   // Define fallback articles to use if no articles are found
   const fallbackArticles = [
       {
+        title: "The Wave and the Ocean",
+        author: "Toshi",
+        date: "2025-05-30",
+        excerpt: "Exploring the nature of consciousness and our deep connection to the universe as expressions of a greater whole.",
+        tags: ["mindset", "consciousness", "philosophy", "connection"],
+        slug: "the-wave-and-the-ocean",
+        section: "mindset"
+      },
+      {
         title: "Into Uncharted Territory",
         author: "Toshi",
         date: "2025-03-17",
@@ -299,6 +310,17 @@ const Overview = () => {
               <img 
                 src={`/content/library/${featuredArticle.section}/${featuredArticle.image}`}
                 alt={featuredArticle.title}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center'
+                }}
+              />
+            ) : featuredArticle.title === "The Wave and the Ocean" ? (
+              <img 
+                src={`/content/library/${featuredArticle.section}/wave.png`}
+                alt="The Wave and the Ocean"
                 style={{
                   width: '100%',
                   height: '100%',
