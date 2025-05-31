@@ -133,13 +133,11 @@ function AppContent() {
         </Routes>
       </main>
 
-      {isHome && (
-        <footer className="footer">
-          <div className="footer-content">
-            <p>&copy; {new Date().getFullYear()} Independently Thinking Human</p>
-          </div>
-        </footer>
-      )}
+      <footer className="footer">
+        <div className="footer-content">
+          <p>&copy; {new Date().getFullYear()} Independently Thinking Human</p>
+        </div>
+      </footer>
     </div>
   );
 }

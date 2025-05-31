@@ -22,6 +22,11 @@ body {
   flex-direction: column;
 }
 
+.main-content {
+  flex: 1 0 auto;
+  /* This makes the main content grow to fill available space */
+}
+
 .header {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
   position: relative;
@@ -309,13 +314,13 @@ body {
 }
 
 .default-page {
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 160px); /* Reduced height to accommodate footer */
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin: 0;
+  margin: 0 0 2rem 0; /* Added bottom margin to create space for footer */
   position: relative;
 }
 
@@ -409,9 +414,9 @@ body {
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
 }
