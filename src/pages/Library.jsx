@@ -209,7 +209,7 @@ const Overview = () => {
       const sortedArticles = allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
       
       // Take the most recent articles for the overview
-      setFeaturedArticles(sortedArticles.slice(0, 5));
+      setFeaturedArticles(sortedArticles.slice(0, 10));
       setLoading(false);
     } catch (error) {
       console.error('Error fetching articles:', error);
