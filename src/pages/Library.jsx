@@ -183,7 +183,7 @@ const Overview = () => {
       // Fetch articles from each section
       const sectionPromises = sections.map(async (section) => {
         try {
-          const response = await fetch(`http://localhost:3001/api/articles/${section}`);
+          const response = await fetch(`http://localhost:3002/api/articles/${section}`);
           if (!response.ok) {
             return []; // Return empty array if section has no articles
           }
