@@ -183,7 +183,7 @@ const Overview = () => {
       // Fetch articles from each section
       const sectionPromises = sections.map(async (section) => {
         try {
-          const response = await fetch(`http://localhost:3002/api/articles/${section}`);
+          const response = await fetch(`http://localhost:3001/api/articles/${section}`);
           if (!response.ok) {
             return []; // Return empty array if section has no articles
           }
@@ -256,6 +256,15 @@ const Overview = () => {
         tags: ["technology", "transistors", "digital revolution", "computing", "future"],
         slug: "the-invisible-revolution",
         section: "technology"
+      },
+      {
+        title: "Caught in a Vicious Cycle",
+        author: "Toshi",
+        date: "2025-04-15",
+        excerpt: "How societal structures and personal choices can trap individuals in cycles of behavior that are difficult to escape.",
+        tags: ["psychology", "society", "behavior patterns", "change"],
+        slug: "caught-in-a-vicious-cycle",
+        section: "psychology"
       },
       {
         title: "Finding Direction",
