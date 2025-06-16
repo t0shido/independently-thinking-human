@@ -240,13 +240,24 @@ const Overview = () => {
   // Define fallback articles to use if no articles are found
   const fallbackArticles = [
       {
+        title: "Through the Eyes of Story",
+        author: "Toshi",
+        date: "2025-06-16",
+        excerpt: "Stories carry the weight of ancient knowledge, acting as living bridges that connect us to the insights and experiences of those who came before. They help us navigate both the world of facts and the world of meaning.",
+        tags: ["stories", "philosophy", "wisdom", "hero's journey"],
+        slug: "through-the-eyes-of-story",
+        section: "stories",
+        image: "stories_one.png"
+      },
+      {
         title: "The Wave and the Ocean",
         author: "Toshi",
         date: "2025-05-30",
         excerpt: "Exploring the nature of consciousness and our deep connection to the universe as expressions of a greater whole.",
         tags: ["mindset", "consciousness", "philosophy", "connection"],
         slug: "the-wave-and-the-ocean",
-        section: "mindset"
+        section: "mindset",
+        image: "wave.png"
       },
       {
         title: "Into Uncharted Territory",
@@ -255,16 +266,18 @@ const Overview = () => {
         excerpt: "How the tiny transistor transformed humanity and accelerated us into an uncertain technological future.",
         tags: ["technology", "transistors", "digital revolution", "computing", "future"],
         slug: "the-invisible-revolution",
-        section: "technology"
+        section: "technology",
+        image: "technology_one.png"
       },
       {
         title: "Caught in a Vicious Cycle",
         author: "Toshi",
-        date: "2025-04-15",
+        date: "2025-06-10",
         excerpt: "How societal structures and personal choices can trap individuals in cycles of behavior that are difficult to escape.",
         tags: ["psychology", "society", "behavior patterns", "change"],
         slug: "caught-in-a-vicious-cycle",
-        section: "psychology"
+        section: "economics",
+        image: "economics_two.png"
       },
       {
         title: "Finding Direction",
@@ -273,7 +286,8 @@ const Overview = () => {
         excerpt: "How finding your purpose transforms motivation, resilience, and fulfillment in an increasingly distracted world.",
         tags: ["mindset", "purpose", "direction", "meaning", "connection"],
         slug: "finding-direction",
-        section: "mindset"
+        section: "mindset",
+        image: "purpose.png"
       },
       {
         title: "Dawn of a New Order",
@@ -282,7 +296,8 @@ const Overview = () => {
         excerpt: "How economic power shifts throughout history, and what the current warning signs tell us about the future of the global economy.",
         tags: ["economics", "history", "currency", "empires", "cycles"],
         slug: "the-rise-and-fall-of-empires",
-        section: "economics"
+        section: "economics",
+        image: "economics_one.png"
       },
       {
         title: "The Cornerstone of Politics",
@@ -291,7 +306,8 @@ const Overview = () => {
         excerpt: "An exploration of how the dynamic tension between liberal and conservative mindsets creates the essential balance that keeps society moving forward sustainably.",
         tags: ["politics", "society", "balance", "democracy", "unity"],
         slug: "the-cornerstone-of-politics",
-        section: "politics"
+        section: "politics",
+        image: "cornerstone.png"
       },
       {
         title: "The Mirror of the Mind",
@@ -300,15 +316,30 @@ const Overview = () => {
       excerpt: "How our perception shapes our reality and why mindset matters more than circumstances.",
       tags: ["mindset", "psychology", "perspective"],
       slug: "the-mirror-of-the-mind",
-      section: "mindset"
+      section: "mindset",
+      image: "mirror.png"
     }
   ];
   
   // Use the fetched articles if available, otherwise use fallback
   const articlesToUse = featuredArticles.length > 0 ? featuredArticles : fallbackArticles;
   
-  // Articles are already sorted by date (newest first)
-  const [featuredArticle, ...otherArticles] = articlesToUse;
+  // Custom sort to ensure specific article order
+  const sortedArticles = [...articlesToUse].sort((a, b) => {
+    // Through the Eyes of Story should always be first
+    if (a.title === "Through the Eyes of Story") return -1;
+    if (b.title === "Through the Eyes of Story") return 1;
+    
+    // Caught in a Vicious Cycle should always be second
+    if (a.title === "Caught in a Vicious Cycle") return -1;
+    if (b.title === "Caught in a Vicious Cycle") return 1;
+    
+    // Otherwise sort by date (newest first)
+    return new Date(b.date) - new Date(a.date);
+  });
+  
+  // Extract featured article and the rest
+  const [featuredArticle, ...otherArticles] = sortedArticles;
 
   return (
     <div className="overview-grid">
@@ -317,7 +348,7 @@ const Overview = () => {
           <div className="book-cover">
             {featuredArticle.image ? (
               <img 
-                src={`/content/library/${featuredArticle.section}/${featuredArticle.image}`}
+                src={featuredArticle.image.startsWith('/') ? featuredArticle.image : `/content/library/${featuredArticle.section}/${featuredArticle.image}`}
                 alt={featuredArticle.title}
                 style={{
                   width: '100%',
@@ -409,7 +440,7 @@ const Overview = () => {
             <div className="book-cover">
               {post.image ? (
                 <img 
-                  src={`/content/library/${post.section}/${post.image}`}
+                  src={post.image.startsWith('/') ? post.image : `/content/library/${post.section}/${post.image}`}
                   alt={post.title}
                   style={{
                     width: '100%',
