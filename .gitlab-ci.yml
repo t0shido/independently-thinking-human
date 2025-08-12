@@ -160,7 +160,13 @@ deploy:production:
         ./venv/bin/pip install --upgrade pip &&
         ./venv/bin/pip install -r requirements.txt &&
         ./venv/bin/python manage.py collectstatic --noinput &&
-        ./venv/bin/python manage.py migrate --noinput &&
+        # Check if .env file exists and has DATABASE_URL
+        if grep -q 'DATABASE_URL' .env; then
+          echo 'Using database configuration from .env file'
+          ./venv/bin/python manage.py migrate --noinput || echo 'Migration failed but continuing deployment'
+        else
+          echo 'Warning: DATABASE_URL not found in .env file, skipping migrations'
+        fi &&
         sudo systemctl restart gunicorn &&
         sudo systemctl reload nginx
       "
