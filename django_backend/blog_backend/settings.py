@@ -71,6 +71,9 @@ WSGI_APPLICATION = 'blog_backend.wsgi.application'
 # Use DATABASE_URL if available, otherwise fall back to default config
 DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL:
+    # Handle both postgresql:// and postgres:// URL formats
+    if DATABASE_URL.startswith('postgresql://'):
+        DATABASE_URL = DATABASE_URL.replace('postgresql://', 'postgres://', 1)
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL)
     }
