@@ -144,6 +144,10 @@ deploy:production:
     # Create all necessary directories on the server with proper permissions
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/django_backend $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH"
     - scp .env.deploy $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/.env
+    # Debug: Check DATABASE_URL format (showing only the structure, not credentials)
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "grep 'DATABASE_URL' $PRODUCTION_PATH/django_backend/.env | sed -E 's/(.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'"
+    # Debug: Check file permissions on .env file
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "ls -la $PRODUCTION_PATH/django_backend/.env"
     - rm -f .env.deploy
   script:
     - echo "Deploying frontend (dist/) and Django backend to production server..."
@@ -163,7 +167,8 @@ deploy:production:
         # Check if .env file exists and has DATABASE_URL
         if grep -q 'DATABASE_URL' .env; then
           echo 'Using database configuration from .env file'
-          ./venv/bin/python manage.py migrate --noinput || echo 'Migration failed but continuing deployment'
+          # Debug: Try running migrations with verbose output
+          ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
         else
           echo 'Warning: DATABASE_URL not found in .env file, skipping migrations'
         fi &&
