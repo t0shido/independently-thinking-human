@@ -141,11 +141,14 @@ deploy:production:
       CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
       DATABASE_URL=${DATABASE_URL}
       EOF2
+    # Create all necessary directories on the server
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/django_backend $PRODUCTION_PATH/frontend_dist"
     - scp .env.deploy $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/.env
     - rm -f .env.deploy
   script:
     - echo "Deploying frontend (dist/) and Django backend to production server..."
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R www-data:www-data $PRODUCTION_PATH/django_backend || true"
+    # Create all necessary directories with proper permissions
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R www-data:www-data $PRODUCTION_PATH || true"
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
     - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
     - |
