@@ -141,8 +141,8 @@ deploy:production:
       CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
       DATABASE_URL=${DATABASE_URL}
       EOF2
-    # Create all necessary directories on the server
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/django_backend $PRODUCTION_PATH/frontend_dist"
+    # Create all necessary directories on the server with proper permissions
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/django_backend $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH"
     - scp .env.deploy $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/.env
     - rm -f .env.deploy
   script:
