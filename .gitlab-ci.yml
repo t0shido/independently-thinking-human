@@ -148,7 +148,7 @@ deploy:production:
   script:
     - echo "Deploying frontend (dist/) and Django backend to production server..."
     # Create all necessary directories with proper permissions
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R www-data:www-data $PRODUCTION_PATH || true"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH || true"
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
     - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
     - |
