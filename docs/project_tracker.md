@@ -61,7 +61,10 @@
 ## Issues and Challenges
 | Issue | Description | Status | Solution |
 |-------|-------------|--------|----------|
-| | | | |
+| GitLab CI template running | GitLab repo initially had sample template, not real pipeline, causing failed deploys. | In progress | Clean `.gitlab-ci.yml` prepared (adds artifacts needs + server .env upload). Push via MR to `main` or temporarily allow force-push, then run pipeline. |
+| Frontend deployed via GitHub, backend via Lightsail | Site is online from GitHub flow but backend deploy isn’t driven by GitLab yet. | In progress | Keep GitHub deploy for SPA; finish GitLab deploy for backend and static/media; confirm Nginx serves SPA and proxies `/api`. |
+| DB password rotated | PostgreSQL password changed; backend can’t connect. | Blocking | Update backend environment `DATABASE_URL` on server (systemd Environment/EnvironmentFile or project `.env`) and in GitLab CI variable; restart Gunicorn; verify with `psql`. |
+| API calls from SPA | SPA may not hit `/api` base or CORS/CSRF not aligned. | To verify | Prefer relative base `/api`; if cross-domain, enable `django-cors-headers`, set `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS`. |
 
 ## Resources
 - Project GitHub repository: (Add link if available)
@@ -85,6 +88,16 @@
    - Services: restart Gunicorn, reload Nginx.
 3. Database
    - PostgreSQL running; app uses either `postgres` or least-privileged `django_user`.
+
+## Next Actions (2025-08-12)
+- Update DB password in backend environment on server (pick what applies):
+  - systemd drop-in: `/etc/systemd/system/<service>.service.d/env.conf` with `Environment=DATABASE_URL=postgresql://USER:NEW_PASSWORD@127.0.0.1:5432/independently_thinking_human`, then `sudo systemctl daemon-reload && sudo systemctl restart <service>`.
+  - or EnvironmentFile referenced by the unit (e.g., `/etc/default/gunicorn`): set `DATABASE_URL=...`, reload + restart.
+  - or project `.env`: `/home/ubuntu/independently_thinking_human/django_backend/.env` add/update `DATABASE_URL=...`, then restart service.
+- Update GitLab CI/CD variable `DATABASE_URL` to the same new value so future deploys keep it.
+- Verify backend: `journalctl -u <service> -n 200 --no-pager`; run `python manage.py migrate --noinput` after venv activate if needed.
+- Frontend API base: ensure SPA uses `/api` (Vite `VITE_API_BASE_URL=/api` for prod or relative paths in code).
+- Merge cleaned `.gitlab-ci.yml` to GitLab `main`; rerun pipeline; approve manual deploy.
 
 ---
 

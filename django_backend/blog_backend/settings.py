@@ -14,12 +14,12 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8h&$#n@m3!y9^8$xz2qj&k7!p3@9x$u$j8f$z@y$z@y$z@y$z'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-8h&$#n@m3!y9^8$xz2qj&k7!p3@9x$u$j8f$z@y$z@y$z@y$z')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,testserver').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -68,17 +68,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blog_backend.wsgi.application'
 
 # Database
-# Using custom PostgreSQL backend with psycopg3
-DATABASES = {
-    'default': {
-        'ENGINE': 'blog_backend.psycopg3_backend',
-        'NAME': 'independently_thinking_human',
-        'USER': 'toshi',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432',
+# Use DATABASE_URL if available, otherwise fall back to default config
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    # Fallback for local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'independently_thinking_human',
+            'USER': 'toshi',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -114,7 +121,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # For development only, restrict in production
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # Only allow all origins in debug mode
+if not DEBUG:
+    # Production CORS settings
+    CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS if origin.strip()]
+
+# CSRF settings for production
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS if origin.strip()]
 
 # REST Framework settings
 REST_FRAMEWORK = {

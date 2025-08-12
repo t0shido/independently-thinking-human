@@ -12,12 +12,14 @@ variables:
   NODE_VERSION: "18"
   PYTHON_VERSION: "3.10"
 
+# Cache dependencies between jobs
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules/
     - ${BACKEND_DIR}/venv/
 
+# Frontend linting
 frontend:lint:
   stage: lint
   image: node:${NODE_VERSION}
@@ -35,6 +37,7 @@ frontend:lint:
       - "package.json"
       - "package-lock.json"
 
+# Backend linting
 backend:lint:
   stage: lint
   image: python:${PYTHON_VERSION}
@@ -51,6 +54,7 @@ backend:lint:
       - "${BACKEND_DIR}/**/*"
       - "${BACKEND_DIR}/requirements.txt"
 
+# Frontend tests
 frontend:test:
   stage: test
   image: node:${NODE_VERSION}
@@ -66,6 +70,7 @@ frontend:test:
       - "package.json"
       - "package-lock.json"
 
+# Backend tests
 backend:test:
   stage: test
   image: python:${PYTHON_VERSION}
@@ -88,6 +93,7 @@ backend:test:
       - "${BACKEND_DIR}/**/*"
       - "${BACKEND_DIR}/requirements.txt"
 
+# Build frontend
 frontend:build:
   stage: build
   image: node:${NODE_VERSION}
@@ -102,6 +108,7 @@ frontend:build:
   only:
     - main
 
+# Build backend (collect static files, migrations)
 backend:build:
   stage: build
   image: python:${PYTHON_VERSION}
@@ -120,48 +127,44 @@ backend:build:
   only:
     - main
 
+# Deploy to production
 deploy:production:
   stage: deploy
   image: alpine:latest
-  needs: ["frontend:build", "backend:build"]
   before_script:
     - apk add --no-cache openssh-client rsync
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d r | ssh-add -
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    # Create a .env locally from CI variables and upload to server
-    - |
-      cat > .env.deploy <<EOF2
-      DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      DEBUG=${DEBUG}
-      DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
-      CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
-      DATABASE_URL=${DATABASE_URL}
-      EOF2
-    - scp .env.deploy $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/.env
-    - rm -f .env.deploy
   script:
     - echo "Deploying frontend (dist/) and Django backend to production server..."
+    # Ensure target directories exist and ownership is sane
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R www-data:www-data $PRODUCTION_PATH/django_backend || true"
+    # Sync frontend build to frontend_dist
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
+    # Sync backend code to django_backend
     - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
+    # Server-side: set up venv, install deps, collect static, migrate, restart services
     - |
-      ssh $PRODUCTION_USER@$PRODUCTION_SERVER "
-        cd $PRODUCTION_PATH/django_backend &&
-        python3 -m venv venv &&
-        source venv/bin/activate &&
-        pip install -r requirements.txt &&
-        python manage.py collectstatic --noinput &&
-        python manage.py migrate --noinput &&
-        sudo systemctl restart gunicorn &&
+      ssh $PRODUCTION_USER@$PRODUCTION_SERVER '
+        set -e
+        cd $PRODUCTION_PATH
+        python3 -m venv venv || true
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install -r $PRODUCTION_PATH/django_backend/requirements.txt
+        cd $PRODUCTION_PATH/django_backend
+        python manage.py collectstatic --noinput
+        python manage.py migrate --noinput
+        sudo systemctl restart gunicorn || sudo systemctl restart independently-thinking-human
         sudo systemctl reload nginx
-      "
-  when: manual
-  only:
-    - main
+      '
   environment:
     name: production
-    url: https://your-domain.com
+    url: https://independently-thinking-human.com
+  only:
+    - main
+  when: manual
