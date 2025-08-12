@@ -9,7 +9,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   FRONTEND_DIR: "."
   BACKEND_DIR: "django_backend"
-  NODE_VERSION: "18"
+  NODE_VERSION: "20"
   PYTHON_VERSION: "3.10"
 
 cache:
@@ -24,7 +24,7 @@ frontend:lint:
   script:
     - cd ${FRONTEND_DIR}
     - npm ci
-    - npm run lint
+    - npx eslint .
   only:
     changes:
       - "*.js"
