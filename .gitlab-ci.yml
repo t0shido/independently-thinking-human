@@ -168,7 +168,7 @@ deploy:production:
         if grep -q 'DATABASE_URL' .env; then
           echo 'Using database configuration from .env file'
           # Debug: Test direct database connection
-          ./venv/bin/python -c "import os, psycopg2; print('Testing database connection'); conn = psycopg2.connect(os.environ.get('DATABASE_URL')); print('Connection successful!'); conn.close()" || echo 'Direct connection failed'
+          ./venv/bin/python -c 'import os, psycopg2; print("Testing database connection"); conn = psycopg2.connect(os.environ.get("DATABASE_URL")); print("Connection successful!"); conn.close()' || echo 'Direct connection failed'
           # Debug: Try running migrations with verbose output
           ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
         else
