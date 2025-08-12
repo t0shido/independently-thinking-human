@@ -1,11 +1,11 @@
-// API service for communicating with the backend
+// API service for communicating with the Django backend
 
-const API_URL = 'http://localhost:3002/api';
+const API_URL = 'http://127.0.0.1:8000/api';
 
 // Get all articles from a section
 export const getArticles = async (section) => {
   try {
-    const response = await fetch(`${API_URL}/articles/${section}`);
+    const response = await fetch(`${API_URL}/articles/${section}/`);
     if (!response.ok) {
       throw new Error('Failed to fetch articles');
     }

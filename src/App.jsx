@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { isMobile } from 'react-device-detect';
 import './App.css';
 import Library from './pages/Library';
-import Data from './pages/Data';
 import Admin from './pages/Admin';
 import MobileNav from './components/MobileNav';
 import chaosOrderImage from '../content/home/chaos_and_order.png';

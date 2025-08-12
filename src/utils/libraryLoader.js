@@ -1,17 +1,6 @@
-import matter from 'gray-matter';
+import { getArticles } from './api';
 
-// Import all JSON files from each section directory
-const sectionFiles = {
-  mindset: import.meta.glob('../../content/library/mindset/*.json', { eager: true, import: 'default' }),
-  politics: import.meta.glob('../../content/library/politics/*.json', { eager: true, import: 'default' }),
-  economics: import.meta.glob('../../content/library/economics/*.json', { eager: true, import: 'default' }),
-  technology: import.meta.glob('../../content/library/technology/*.json', { eager: true, import: 'default' }),
-  health: import.meta.glob('../../content/library/health/*.json', { eager: true, import: 'default' }),
-  stories: import.meta.glob('../../content/library/stories/*.json', { eager: true, import: 'default' })
-};
-
-console.log('Available section files:', JSON.stringify(sectionFiles, null, 2));
-
+// Define available sections
 const SECTIONS = {
   mindset: [],
   politics: [],
@@ -21,47 +10,62 @@ const SECTIONS = {
   stories: []
 };
 
+// Cache for API responses to avoid unnecessary requests
+// Clear cache on module reload during development
+const apiCache = {};
+
+// Function to clear cache (useful during development)
+export function clearCache() {
+  Object.keys(apiCache).forEach(key => delete apiCache[key]);
+  console.log('API cache cleared');
+}
+
+/**
+ * Get all posts for a specific section using the API
+ * Falls back to file-based loading if API fails
+ */
 export async function getSectionPosts(section) {
   console.log('Loading posts for section:', section);
   
   try {
-    if (sectionFiles[section]) {
-      const posts = [];
-      const files = sectionFiles[section];
-      console.log('Number of files found:', Object.keys(files).length);
-      
-      for (const path in files) {
-        try {
-          console.log('Processing file:', path);
-          const post = files[path];
-          console.log('Post data:', JSON.stringify(post, null, 2));
-          
-          // Extract filename for slug
-          const filename = path.split('/').pop().replace('.json', '');
-          console.log('Generated slug:', filename);
-          
-          posts.push({
-            ...post,
-            slug: filename
-          });
-        } catch (error) {
-          console.error(`Error loading file ${path}:`, error);
-        }
-      }
-      
-      console.log('Final posts array:', JSON.stringify(posts, null, 2));
-      // Sort posts by date (newest first)
-      return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Check if we have a cached response
+    if (apiCache[section]) {
+      console.log('Using cached data for section:', section);
+      return apiCache[section];
     }
     
-    return SECTIONS[section] || [];
+    // Try to fetch from API first
+    console.log('Fetching from API for section:', section);
+    const posts = await getArticles(section);
+    
+    // Cache the response
+    apiCache[section] = posts;
+    
+    console.log(`Loaded ${posts.length} posts from API for section:`, section);
+    return posts;
   } catch (error) {
-    console.error('Error loading posts:', error);
-    return [];
+    console.error('Error loading posts from API:', error);
+    console.log('Falling back to default section data');
+    return SECTIONS[section] || [];
   }
 }
 
 export async function getPostBySlug(section, slug) {
-  const posts = await getSectionPosts(section);
-  return posts.find(post => post.slug === slug);
+  try {
+    // First try to get all posts for the section
+    const posts = await getSectionPosts(section);
+    
+    // Find the post with the matching slug
+    const post = posts.find(post => post.slug === slug);
+    
+    if (post) {
+      return post;
+    } else {
+      console.error(`Post with slug ${slug} not found in section ${section}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error fetching post ${slug} from section ${section}:`, error);
+    return null;
+  }
 }

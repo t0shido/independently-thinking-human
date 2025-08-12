@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn daemon for Independently Thinking Human Django Backend
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/independently-thinking-human/django_backend
+ExecStart=/home/ubuntu/independently-thinking-human/django_backend/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/home/ubuntu/independently-thinking-human/django_backend/gunicorn.sock \
+          blog_backend.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

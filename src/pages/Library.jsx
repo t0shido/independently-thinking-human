@@ -4,11 +4,8 @@ import { isMobile } from 'react-device-detect';
 import { getSectionPosts } from '../utils/libraryLoader';
 import { LibraryPost } from '../components/LibraryPost';
 import LibraryMobileNav from '../components/LibraryMobileNav';
-import mirrorImage from '../../content/library/mindset/mirror.png';
-import purposeImage from '../../content/library/mindset/purpose.png';
-import cornerstoneImage from '../../content/library/politics/cornerstone.png';
-import empireCyclesImage from '../../content/library/economics/economics_one.png';
-import technologyImage from '../../content/library/technology/technology_one.png';
+import { getImageUrl } from '../utils/imageUtils';
+import config from '../config';
 import './Library.css';
 
 const LibrarySection = ({ section }) => {
@@ -23,14 +20,8 @@ const LibrarySection = ({ section }) => {
       setError(null);
       try {
         const sectionPosts = await getSectionPosts(section);
-        // Move "The Wave and the Ocean" to the first position if it exists, followed by "Finding Direction"
-        const reorderedPosts = sectionPosts.sort((a, b) => {
-          if (a.title === "The Wave and the Ocean") return -1;
-          if (b.title === "The Wave and the Ocean") return 1;
-          if (a.title === "Finding Direction") return -1;
-          if (b.title === "Finding Direction") return 1;
-          return 0;
-        });
+        // Sort by date (newest first)
+        const reorderedPosts = sectionPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
         setPosts(reorderedPosts);
       } catch (error) {
         console.error('Error loading posts:', error);
@@ -74,9 +65,9 @@ const LibrarySection = ({ section }) => {
         {posts[0] && (
           <Link to={`/library/${section}/${posts[0].slug}`} className="book-card large">
             <div className="book-cover">
-              {posts[0].image ? (
+              {posts[0].image && (
                 <img 
-                  src={`/content/library/${section}/${posts[0].image}`}
+                  src={getImageUrl(posts[0], section)}
                   alt={posts[0].title}
                   style={{
                     width: '100%',
@@ -85,62 +76,7 @@ const LibrarySection = ({ section }) => {
                     objectPosition: 'center'
                   }}
                 />
-              ) : posts[0].title === "The Mirror of the Mind" ? (
-                <img 
-                  src={mirrorImage}
-                  alt="Mindset"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : posts[0].title === "Finding Direction" ? (
-                <img 
-                  src={purposeImage}
-                  alt="Direction"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : posts[0].title === "Into Uncharted Territory" ? (
-                <img 
-                  src={technologyImage}
-                  alt="Technology"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : posts[0].title === "The Cornerstone of Politics" ? (
-                <img 
-                  src={cornerstoneImage}
-                  alt="Politics"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : (posts[0].title === "The Rise and Fall of Empires: Economic Cycles That Shape History" || posts[0].title === "Dawn of a New Order") ? (
-                <img 
-                  src={empireCyclesImage}
-                  alt="Economics"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : null}
+              )}
             </div>
             <div className="card-content">
               <h2>Featured in {section.charAt(0).toUpperCase() + section.slice(1)}</h2>
@@ -177,18 +113,14 @@ const Overview = () => {
       setLoading(true);
       setError(null);
       
-      // Define the sections to fetch
-      const sections = ['mindset', 'politics', 'economics', 'technology', 'health', 'stories'];
+      // Get sections from config
+      const sections = config.content.sections;
       
-      // Fetch articles from each section
+      // Fetch articles from each section using the same function as LibrarySection
       const sectionPromises = sections.map(async (section) => {
         try {
-          const response = await fetch(`http://localhost:3001/api/articles/${section}`);
-          if (!response.ok) {
-            return []; // Return empty array if section has no articles
-          }
-          const articles = await response.json();
-          // Add section to each article
+          const articles = await getSectionPosts(section);
+          // Add section to each article (getSectionPosts might not include it)
           return articles.map(article => ({
             ...article,
             section
@@ -237,104 +169,12 @@ const Overview = () => {
     return <div className="error-message">{error}</div>;
   }
   
-  // Define fallback articles to use if no articles are found
-  const fallbackArticles = [
-      {
-        title: "Through the Eyes of Story",
-        author: "Toshi",
-        date: "2025-06-16",
-        excerpt: "Stories act as bridges connecting us to ancient wisdom, helping us navigate both facts and meaning in our complex world.",
-        tags: ["stories", "philosophy", "wisdom", "hero's journey"],
-        slug: "through-the-eyes-of-story",
-        section: "stories",
-        image: "stories_one.png"
-      },
-      {
-        title: "The Wave and the Ocean",
-        author: "Toshi",
-        date: "2025-05-30",
-        excerpt: "Exploring the nature of consciousness and our deep connection to the universe as expressions of a greater whole.",
-        tags: ["mindset", "consciousness", "philosophy", "connection"],
-        slug: "the-wave-and-the-ocean",
-        section: "mindset",
-        image: "wave.png"
-      },
-      {
-        title: "Into Uncharted Territory",
-        author: "Toshi",
-        date: "2025-03-17",
-        excerpt: "How the tiny transistor transformed humanity and accelerated us into an uncertain technological future.",
-        tags: ["technology", "transistors", "digital revolution", "computing", "future"],
-        slug: "the-invisible-revolution",
-        section: "technology",
-        image: "technology_one.png"
-      },
-      {
-        title: "Caught in a Vicious Cycle",
-        author: "Toshi",
-        date: "2025-06-10",
-        excerpt: "Exploring how our modern monetary system creates an endless cycle of debt and why the current structure may be unsustainable.",
-        tags: ["economics", "money", "debt", "central banking", "inflation"],
-        slug: "caught-in-a-vicious-cycle",
-        section: "economics",
-        image: "economics_two.png"
-      },
-      {
-        title: "Finding Direction",
-        author: "Toshi",
-        date: "2025-03-14",
-        excerpt: "How finding your purpose transforms motivation, resilience, and fulfillment in an increasingly distracted world.",
-        tags: ["mindset", "purpose", "direction", "meaning", "connection"],
-        slug: "finding-direction",
-        section: "mindset",
-        image: "purpose.png"
-      },
-      {
-        title: "Dawn of a New Order",
-        author: "Toshi",
-        date: "2025-03-04",
-        excerpt: "How economic power shifts throughout history, and what the current warning signs tell us about the future of the global economy.",
-        tags: ["economics", "history", "currency", "empires", "cycles"],
-        slug: "the-rise-and-fall-of-empires",
-        section: "economics",
-        image: "economics_one.png"
-      },
-      {
-        title: "The Cornerstone of Politics",
-        author: "Toshi",
-        date: "2025-02-22",
-        excerpt: "An exploration of how the dynamic tension between liberal and conservative mindsets creates the essential balance that keeps society moving forward sustainably.",
-        tags: ["politics", "society", "balance", "democracy", "unity"],
-        slug: "the-cornerstone-of-politics",
-        section: "politics",
-        image: "cornerstone.png"
-      },
-      {
-        title: "The Mirror of the Mind",
-        author: "Toshi",
-      date: "2025-02-11",
-      excerpt: "How our perception shapes our reality and why mindset matters more than circumstances.",
-      tags: ["mindset", "psychology", "perspective"],
-      slug: "the-mirror-of-the-mind",
-      section: "mindset",
-      image: "mirror.png"
-    }
-  ];
+  if (featuredArticles.length === 0) {
+    return <div className="loading-message">No articles found.</div>;
+  }
   
-  // Use the fetched articles if available, otherwise use fallback
-  const articlesToUse = featuredArticles.length > 0 ? featuredArticles : fallbackArticles;
-  
-  // Custom sort to ensure specific article order
-  const sortedArticles = [...articlesToUse].sort((a, b) => {
-    // Through the Eyes of Story should always be first
-    if (a.title === "Through the Eyes of Story") return -1;
-    if (b.title === "Through the Eyes of Story") return 1;
-    
-    // Caught in a Vicious Cycle should always be second
-    if (a.title === "Caught in a Vicious Cycle") return -1;
-    if (b.title === "Caught in a Vicious Cycle") return 1;
-    
-    // Otherwise sort by date (newest first)
+  // Sort articles by date (newest first)
+  const sortedArticles = [...featuredArticles].sort((a, b) => {
     return new Date(b.date) - new Date(a.date);
   });
   
@@ -346,9 +186,9 @@ const Overview = () => {
       <div className="featured-section">
         <Link to={`/library/${featuredArticle.section}/${featuredArticle.slug}`} className="book-card large">
           <div className="book-cover">
-            {featuredArticle.image ? (
+            {featuredArticle.image && (
               <img 
-                src={featuredArticle.image.startsWith('/') ? featuredArticle.image : `/content/library/${featuredArticle.section}/${featuredArticle.image}`}
+                src={getImageUrl(featuredArticle)}
                 alt={featuredArticle.title}
                 style={{
                   width: '100%',
@@ -357,73 +197,7 @@ const Overview = () => {
                   objectPosition: 'center'
                 }}
               />
-            ) : featuredArticle.title === "The Wave and the Ocean" ? (
-              <img 
-                src={`/content/library/${featuredArticle.section}/wave.png`}
-                alt="The Wave and the Ocean"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            ) : featuredArticle.title === "The Mirror of the Mind" ? (
-              <img 
-                src={mirrorImage}
-                alt="Mindset"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            ) : featuredArticle.title === "Finding Direction" ? (
-              <img 
-                src={purposeImage}
-                alt="Direction"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            ) : featuredArticle.title === "Into Uncharted Territory" ? (
-              <img 
-                src={technologyImage}
-                alt="Technology"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            ) : featuredArticle.title === "The Cornerstone of Politics" ? (
-              <img 
-                src={cornerstoneImage}
-                alt="Politics"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            ) : (featuredArticle.title === "The Rise and Fall of Empires: Economic Cycles That Shape History" || featuredArticle.title === "Dawn of a New Order") ? (
-              <img 
-                src={empireCyclesImage}
-                alt="Economics"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            ) : null}
+            )}
           </div>
           <div className="card-content">
             <h2>Featured in {featuredArticle.section.charAt(0).toUpperCase() + featuredArticle.section.slice(1)}</h2>
@@ -436,84 +210,14 @@ const Overview = () => {
       </div>
       <div className="secondary-section">
         {otherArticles.map(post => (
-          <Link key={post.slug} to={`/library/${post.section}/${post.slug}`} className="book-card large">
-            <div className="book-cover">
-              {post.image ? (
-                <img 
-                  src={post.image.startsWith('/') ? post.image : `/content/library/${post.section}/${post.image}`}
-                  alt={post.title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : post.title === "The Mirror of the Mind" ? (
-                <img 
-                  src={mirrorImage}
-                  alt="Mindset"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : post.title === "Finding Direction" ? (
-                <img 
-                  src={purposeImage}
-                  alt="Direction"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : post.title === "Into Uncharted Territory" ? (
-                <img 
-                  src={technologyImage}
-                  alt="Technology"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : post.title === "The Cornerstone of Politics" ? (
-                <img 
-                  src={cornerstoneImage}
-                  alt="Politics"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : (post.title === "The Rise and Fall of Empires: Economic Cycles That Shape History" || post.title === "Dawn of a New Order") ? (
-                <img 
-                  src={empireCyclesImage}
-                  alt="Economics"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              ) : null}
-            </div>
-            <div className="card-content">
-              <h2>Featured in {post.section.charAt(0).toUpperCase() + post.section.slice(1)}</h2>
-              <h3>{post.title}</h3>
-              <p className="description">{post.excerpt}</p>
-              <p className="author">By {post.author}</p>
-              {!isMobile && <p className="category">{post.tags?.join(', ')}</p>}
-            </div>
-          </Link>
+          <LibraryPost 
+            key={post.slug} 
+            post={post} 
+            isPreview={true} 
+            section={post.section}
+            cardStyle="large"
+            showSectionHeading={true}
+          />
         ))}
       </div>
     </div>

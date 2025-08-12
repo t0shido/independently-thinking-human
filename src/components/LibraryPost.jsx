@@ -2,23 +2,22 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
-import mirrorImage from '../../content/library/mindset/mirror.png';
-import purposeImage from '../../content/library/mindset/purpose.png';
-import cornerstoneImage from '../../content/library/politics/cornerstone.png';
-import empireCyclesImage from '../../content/library/economics/economics_one.png';
-import technologyImage from '../../content/library/technology/technology_one.png';
+import { getImageUrl } from '../utils/imageUtils';
+import config from '../config';
 import './LibraryPost.css';
 
-export const LibraryPost = ({ post, isPreview = false, section }) => {
+export const LibraryPost = ({ post, isPreview = false, section, cardStyle = 'horizontal', showSectionHeading = false }) => {
   if (!post) return null;
+  
+  const imageUrl = getImageUrl(post);
 
   if (isPreview) {
     return (
-      <Link to={`/library/${section}/${post.slug}`} className={`book-card horizontal ${isMobile ? 'mobile-view' : ''}`}>
+      <Link to={`/library/${section}/${post.slug}`} className={`book-card ${cardStyle} ${isMobile ? 'mobile-view' : ''}`}>
         <div className="book-cover">
-          {post.image ? (
+          {imageUrl && (
             <img 
-              src={`/content/library/${section}/${post.image}`}
+              src={imageUrl}
               alt={post.title}
               style={{
                 width: '100%',
@@ -26,80 +25,14 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
                 objectFit: 'cover',
                 objectPosition: 'center'
               }}
-            />
-          ) : post.title === "The Wave and the Ocean" ? (
-            <img 
-              src={`/content/library/${section}/wave.png`}
-              alt="The Wave and the Ocean"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          ) : post.title === "The Mirror of the Mind" ? (
-            <img 
-              src={mirrorImage}
-              alt="Mindset"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          ) : null}
-          {!post.image && post.title === "Finding Direction" && (
-            <img 
-              src={purposeImage}
-              alt="Direction"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          )}
-          {!post.image && post.title === "Into Uncharted Territory" && (
-            <img 
-              src={technologyImage}
-              alt="Technology"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          )}
-          {!post.image && post.title === "The Cornerstone of Politics" && (
-            <img 
-              src={cornerstoneImage}
-              alt="Politics"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          )}
-          {!post.image && (post.title === "The Rise and Fall of Empires: Economic Cycles That Shape History" || post.title === "Dawn of a New Order") && (
-            <img 
-              src={empireCyclesImage}
-              alt="Economics"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
+
             />
           )}
         </div>
         <div className="card-content">
+          {showSectionHeading && section && (
+            <h2>Featured in {section.charAt(0).toUpperCase() + section.slice(1)}</h2>
+          )}
           <h3>{post.title}</h3>
           <p className="description">{post.excerpt}</p>
           <p className="author">By {post.author}</p>
@@ -124,9 +57,9 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
         <ReactMarkdown>{beforeImage}</ReactMarkdown>
         
         <div className="library-post-image">
-          {post.image ? (
+          {imageUrl && (
             <img 
-              src={`/content/library/${section}/${post.image}`}
+              src={imageUrl}
               alt={post.title}
               style={{
                 width: '100%',
@@ -134,75 +67,9 @@ export const LibraryPost = ({ post, isPreview = false, section }) => {
                 objectFit: 'cover',
                 objectPosition: 'center'
               }}
-            />
-          ) : post.title === "The Wave and the Ocean" ? (
-            <img 
-              src={`/content/library/${section}/wave.png`}
-              alt="The Wave and the Ocean"
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          ) : post.title === "The Mirror of the Mind" ? (
-            <img 
-              src={mirrorImage}
-              alt="Mindset"
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          ) : null}
-          {post.title === "Finding Direction" && !post.image && (
-            <img 
-              src={purposeImage}
-              alt="Direction"
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          )}
-          {!post.image && post.title === "Into Uncharted Territory" && (
-            <img 
-              src={technologyImage}
-              alt="Technology"
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          )}
-          {!post.image && post.title === "The Cornerstone of Politics" && (
-            <img 
-              src={cornerstoneImage}
-              alt="Politics"
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          )}
-          {!post.image && (post.title === "The Rise and Fall of Empires: Economic Cycles That Shape History" || post.title === "Dawn of a New Order") && (
-            <img 
-              src={empireCyclesImage}
-              alt="Economics"
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
+              onError={(e) => {
+                console.error(`Failed to load image: ${imageUrl}`);
+                e.target.style.display = 'none';
               }}
             />
           )}
