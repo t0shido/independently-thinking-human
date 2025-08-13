@@ -160,30 +160,50 @@ deploy:production:
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
     - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH && chmod +x scripts/*.py"
+    # Create a deployment script to run on the server
     - |
-      ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH/django_backend && \
-        sudo apt-get update && sudo apt-get install -y python3-venv python3-full && \
-        rm -rf venv && \
-        python3 -m venv venv && \
-        ./venv/bin/pip install --upgrade pip && \
-        ./venv/bin/pip install -r requirements.txt && \
-        ./venv/bin/python manage.py collectstatic --noinput && \
-        if grep -q 'DATABASE_URL' .env; then \
-          echo 'Using database configuration from .env file' && \
-          echo 'Content of .env file (credentials masked):' && \
-          cat .env | sed -E 's/(DATABASE_URL=.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/' && \
-          echo 'Checking DATABASE_URL environment variable' && \
-          ./venv/bin/python ../scripts/check_db_url.py || echo 'Failed to check DATABASE_URL' && \
-          echo 'Testing database connection' && \
-          ./venv/bin/python ../scripts/test_db_connection.py || echo 'Direct connection failed' && \
-          echo 'Checking Django settings' && \
-          ./venv/bin/python ../scripts/check_django_settings.py || echo 'Failed to check Django settings' && \
-          ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment' \
-        else \
-          echo 'Warning: DATABASE_URL not found in .env file, skipping migrations' \
-        fi && \
-        sudo systemctl restart gunicorn && \
-        sudo systemctl reload nginx"
+      cat > deploy.sh <<'EOFSCRIPT'
+      #!/bin/bash
+      set -e
+      cd $PRODUCTION_PATH/django_backend
+      echo "Installing dependencies..."
+      sudo apt-get update && sudo apt-get install -y python3-venv python3-full
+      echo "Setting up Python virtual environment..."
+      rm -rf venv
+      python3 -m venv venv
+      ./venv/bin/pip install --upgrade pip
+      ./venv/bin/pip install -r requirements.txt
+      echo "Collecting static files..."
+      ./venv/bin/python manage.py collectstatic --noinput
+      
+      if grep -q 'DATABASE_URL' .env; then
+        echo 'Using database configuration from .env file'
+        echo 'Content of .env file (credentials masked):'
+        cat .env | sed -E 's/(DATABASE_URL=.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'
+        
+        echo 'Checking DATABASE_URL environment variable'
+        ./venv/bin/python ../scripts/check_db_url.py || echo 'Failed to check DATABASE_URL'
+        
+        echo 'Testing database connection'
+        ./venv/bin/python ../scripts/test_db_connection.py || echo 'Direct connection failed'
+        
+        echo 'Checking Django settings'
+        ./venv/bin/python ../scripts/check_django_settings.py || echo 'Failed to check Django settings'
+        
+        echo 'Running migrations'
+        ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
+      else
+        echo 'Warning: DATABASE_URL not found in .env file, skipping migrations'
+      fi
+      
+      echo "Restarting services..."
+      sudo systemctl restart gunicorn
+      sudo systemctl reload nginx
+      echo "Deployment completed."
+      EOFSCRIPT
+    - chmod +x deploy.sh
+    - scp deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/deploy.sh
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH && chmod +x deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH ./deploy.sh"
 
   when: manual
   only:
