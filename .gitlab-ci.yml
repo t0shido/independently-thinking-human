@@ -135,11 +135,15 @@ deploy:production:
     # Create a .env locally from CI variables and upload to server
     - |
       cat > .env.deploy <<EOF2
-      DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      # Django settings
+      SECRET_KEY=${DJANGO_SECRET_KEY}
       DEBUG=${DEBUG}
-      DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+      ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
-      DATABASE_URL=${DATABASE_URL}
+      # Database settings
+      DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://toshi:postgres_password@localhost:5432/independently_thinking_human}
+      # Media settings
+      MEDIA_URL=/media/
       EOF2
     # Create all necessary directories on the server with proper permissions
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/django_backend $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH"
@@ -176,24 +180,53 @@ deploy:production:
       echo "Collecting static files..."
       ./venv/bin/python manage.py collectstatic --noinput
       
+      # Ensure .env file exists
+      if [ ! -f .env ]; then
+        echo 'ERROR: .env file not found!'
+        exit 1
+      fi
+      
+      # Check for database configuration
+      echo 'Content of .env file (credentials masked):'
+      cat .env | grep -v "PASSWORD\|SECRET" || cat .env | sed -E 's/(DATABASE_URL=.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'
+      
+      # Check if DATABASE_URL exists in the .env file
       if grep -q 'DATABASE_URL' .env; then
         echo 'Using database configuration from .env file'
-        echo 'Content of .env file (credentials masked):'
-        cat .env | sed -E 's/(DATABASE_URL=.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'
+        
+        # Export environment variables from .env to make them available to Python scripts
+        export $(grep -v '^#' .env | xargs)
         
         echo 'Checking DATABASE_URL environment variable'
-        ./venv/bin/python ../scripts/check_db_url.py || echo 'Failed to check DATABASE_URL'
+        ./venv/bin/python ../scripts/check_db_url.py
         
         echo 'Testing database connection'
-        ./venv/bin/python ../scripts/test_db_connection.py || echo 'Direct connection failed'
+        ./venv/bin/python ../scripts/test_db_connection.py
         
         echo 'Checking Django settings'
-        ./venv/bin/python ../scripts/check_django_settings.py || echo 'Failed to check Django settings'
+        ./venv/bin/python ../scripts/check_django_settings.py
+        
+        # Check PostgreSQL connection directly
+        echo 'Testing PostgreSQL connection directly'
+        if command -v psql &> /dev/null; then
+          DB_URL=$(grep DATABASE_URL .env | cut -d '=' -f2-)
+          if [[ $DB_URL == postgresql://* ]]; then
+            DB_USER=$(echo $DB_URL | sed -E 's/postgresql:\/\/([^:]+).*/\1/')
+            DB_HOST=$(echo $DB_URL | sed -E 's/.*@([^:]+).*/\1/')
+            DB_NAME=$(echo $DB_URL | sed -E 's/.*\/([^?]+).*/\1/')
+            echo "Attempting direct psql connection as $DB_USER to $DB_HOST/$DB_NAME"
+            PGPASSWORD=$(echo $DB_URL | sed -E 's/.*:([^@]+)@.*/\1/') psql -U $DB_USER -h $DB_HOST -d $DB_NAME -c "\l" || echo "Direct psql connection failed"
+          else
+            echo "DATABASE_URL not in expected postgresql:// format"
+          fi
+        else
+          echo "psql command not available"
+        fi
         
         echo 'Running migrations'
         ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
       else
-        echo 'Warning: DATABASE_URL not found in .env file, skipping migrations'
+        echo 'ERROR: DATABASE_URL not found in .env file, skipping migrations'
       fi
       
       echo "Restarting services..."
