@@ -157,6 +157,11 @@ deploy:production:
     - echo "Deploying frontend (dist/) and Django backend to production server..."
     # Create scripts directory for deployment scripts
     - mkdir -p scripts
+    # Deploy Nginx configuration
+    - echo "Deploying Nginx configuration..."
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p /etc/nginx/sites-available"
+    - scp nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/home/ubuntu/independently-thinking-human/nginx-config.conf
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo cp /home/ubuntu/independently_thinking_human/nginx-config.conf /etc/nginx/sites-available/independently-thinking-human && sudo ln -sf /etc/nginx/sites-available/independently-thinking-human /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default && sudo nginx -t && sudo systemctl restart nginx"
     # Copy diagnostic scripts
     - rsync -az scripts/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/scripts/
     # Create all necessary directories with proper permissions
