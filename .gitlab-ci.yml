@@ -141,7 +141,7 @@ deploy:production:
       ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
       # Database settings
-      DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://toshi:postgres_password@localhost:5432/independently_thinking_human}
+      DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://postgres:postgres_password@localhost:5432/postgres}
       # Media settings
       MEDIA_URL=/media/
       EOF2
