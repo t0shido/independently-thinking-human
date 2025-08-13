@@ -140,7 +140,7 @@ deploy:production:
       DEBUG=${DEBUG}
       ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
-      # Database settings
+      # Database settings - using postgres user and database
       DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://postgres:postgres_password@localhost:5432/postgres}
       # Media settings
       MEDIA_URL=/media/
