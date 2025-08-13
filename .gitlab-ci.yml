@@ -151,43 +151,40 @@ deploy:production:
     - rm -f .env.deploy
   script:
     - echo "Deploying frontend (dist/) and Django backend to production server..."
+    # Create scripts directory for deployment scripts
+    - mkdir -p scripts
+    # Copy diagnostic scripts
+    - rsync -az scripts/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/scripts/
     # Create all necessary directories with proper permissions
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH || true"
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
     - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH && chmod +x scripts/*.py"
     - |
-      ssh $PRODUCTION_USER@$PRODUCTION_SERVER "
-        cd $PRODUCTION_PATH/django_backend &&
-        sudo apt-get update && sudo apt-get install -y python3-venv python3-full &&
-        rm -rf venv &&
-        python3 -m venv venv &&
-        ./venv/bin/pip install --upgrade pip &&
-        ./venv/bin/pip install -r requirements.txt &&
-        ./venv/bin/python manage.py collectstatic --noinput &&
-        # Check if .env file exists and has DATABASE_URL
-        if grep -q 'DATABASE_URL' .env; then
-          echo 'Using database configuration from .env file'
-          # Debug: Show .env file content with credentials masked
-          echo "Content of .env file (credentials masked):"
-          cat .env | sed -E 's/(DATABASE_URL=.+:/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'
-          
-          # Debug: Print database URL and test connection
-          echo "Checking DATABASE_URL environment variable"
-          ./venv/bin/python -c "import os; db_url = os.environ.get('DATABASE_URL', 'Not found'); masked_url = db_url; \n          if '@' in db_url: \n              parts = db_url.split('@'); \n              masked_url = '[CREDENTIALS_MASKED]@' + parts[1]; \n          print('DATABASE_URL: ' + masked_url)" || echo 'Failed to check DATABASE_URL'
-          
-          # Debug: Test direct database connection with simpler code
-          ./venv/bin/python -c "import os, psycopg2, urllib.parse; \n          print('Testing database connection'); \n          db_url = os.environ['DATABASE_URL']; \n          parsed = urllib.parse.urlparse(db_url); \n          host = str(parsed.hostname); \n          port = str(parsed.port); \n          dbname = parsed.path[1:]; \n          print('Host: ' + host + ', Port: ' + port + ', DB: ' + dbname); \n          try: \n              conn = psycopg2.connect(db_url); \n              print('Connection successful!'); \n              conn.close(); \n          except Exception as e: \n              print('Connection error: ' + str(e))" || echo 'Direct connection failed'
-          # Debug: Check Django's database settings with simpler code
-          ./venv/bin/python -c "import os, sys, django; \n          sys.path.append('.'); \n          os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blog_backend.settings'); \n          django.setup(); \n          from django.conf import settings; \n          engine = settings.DATABASES['default']['ENGINE']; \n          host = settings.DATABASES['default']['HOST']; \n          port = settings.DATABASES['default']['PORT']; \n          print('Django DATABASE settings: ' + engine + ' ' + host + ' ' + str(port))" || echo 'Failed to check Django settings'
-          
-          # Debug: Try running migrations with verbose output
-          ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
-        else
-          echo 'Warning: DATABASE_URL not found in .env file, skipping migrations'
-        fi &&
-        sudo systemctl restart gunicorn &&
-        sudo systemctl reload nginx
-      "
+      ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH/django_backend && \
+        sudo apt-get update && sudo apt-get install -y python3-venv python3-full && \
+        rm -rf venv && \
+        python3 -m venv venv && \
+        ./venv/bin/pip install --upgrade pip && \
+        ./venv/bin/pip install -r requirements.txt && \
+        ./venv/bin/python manage.py collectstatic --noinput && \
+        if grep -q 'DATABASE_URL' .env; then \
+          echo 'Using database configuration from .env file' && \
+          echo 'Content of .env file (credentials masked):' && \
+          cat .env | sed -E 's/(DATABASE_URL=.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/' && \
+          echo 'Checking DATABASE_URL environment variable' && \
+          ./venv/bin/python ../scripts/check_db_url.py || echo 'Failed to check DATABASE_URL' && \
+          echo 'Testing database connection' && \
+          ./venv/bin/python ../scripts/test_db_connection.py || echo 'Direct connection failed' && \
+          echo 'Checking Django settings' && \
+          ./venv/bin/python ../scripts/check_django_settings.py || echo 'Failed to check Django settings' && \
+          ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment' \
+        else \
+          echo 'Warning: DATABASE_URL not found in .env file, skipping migrations' \
+        fi && \
+        sudo systemctl restart gunicorn && \
+        sudo systemctl reload nginx"
+
   when: manual
   only:
     - main
