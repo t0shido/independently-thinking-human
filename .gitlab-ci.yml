@@ -173,21 +173,12 @@ deploy:production:
           
           # Debug: Print database URL and test connection
           echo "Checking DATABASE_URL environment variable"
-          ./venv/bin/python -c "import os; db_url = os.environ.get('DATABASE_URL', 'Not found'); print('DATABASE_URL: ' + (db_url.replace(db_url.split('@')[0], '[CREDENTIALS_MASKED]') if '@' in db_url else db_url))" || echo 'Failed to check DATABASE_URL'
+          ./venv/bin/python -c "import os; db_url = os.environ.get('DATABASE_URL', 'Not found'); masked_url = db_url; \n          if '@' in db_url: \n              parts = db_url.split('@'); \n              masked_url = '[CREDENTIALS_MASKED]@' + parts[1]; \n          print('DATABASE_URL: ' + masked_url)" || echo 'Failed to check DATABASE_URL'
           
-          # Debug: Test direct database connection with proper quoting and explicit parameters
-          ./venv/bin/python -c "import os, psycopg2, urllib.parse; print('Testing database connection'); \
-          db_url = os.environ['DATABASE_URL']; \
-          parsed = urllib.parse.urlparse(db_url); \
-          print('Host: ' + str(parsed.hostname) + ', Port: ' + str(parsed.port) + ', DB: ' + parsed.path[1:]); \
-          try: \
-              conn = psycopg2.connect(db_url); \
-              print('Connection successful!'); \
-              conn.close(); \
-          except Exception as e: \
-              print('Connection error: ' + str(e))" || echo 'Direct connection failed'
-          # Debug: Check Django's database settings
-          ./venv/bin/python -c "import os, sys, django; sys.path.append('.'); os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blog_backend.settings'); django.setup(); from django.conf import settings; print('Django DATABASE settings:', settings.DATABASES['default']['ENGINE'], settings.DATABASES['default']['HOST'], settings.DATABASES['default']['PORT'])" || echo 'Failed to check Django settings'
+          # Debug: Test direct database connection with simpler code
+          ./venv/bin/python -c "import os, psycopg2, urllib.parse; \n          print('Testing database connection'); \n          db_url = os.environ['DATABASE_URL']; \n          parsed = urllib.parse.urlparse(db_url); \n          host = str(parsed.hostname); \n          port = str(parsed.port); \n          dbname = parsed.path[1:]; \n          print('Host: ' + host + ', Port: ' + port + ', DB: ' + dbname); \n          try: \n              conn = psycopg2.connect(db_url); \n              print('Connection successful!'); \n              conn.close(); \n          except Exception as e: \n              print('Connection error: ' + str(e))" || echo 'Direct connection failed'
+          # Debug: Check Django's database settings with simpler code
+          ./venv/bin/python -c "import os, sys, django; \n          sys.path.append('.'); \n          os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blog_backend.settings'); \n          django.setup(); \n          from django.conf import settings; \n          engine = settings.DATABASES['default']['ENGINE']; \n          host = settings.DATABASES['default']['HOST']; \n          port = settings.DATABASES['default']['PORT']; \n          print('Django DATABASE settings: ' + engine + ' ' + host + ' ' + str(port))" || echo 'Failed to check Django settings'
           
           # Debug: Try running migrations with verbose output
           ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
