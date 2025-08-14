@@ -75,7 +75,7 @@ backend:test:
     POSTGRES_DB: test_db
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
-    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/test_db"
+    DATABASE_URL: "postgresql://postgres:${DB_PASSWORD}@localhost:5432/postgres"
   script:
     - cd ${BACKEND_DIR}
     - pip install virtualenv
@@ -141,7 +141,7 @@ deploy:production:
       ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
       # Database settings - using postgres user and database
-      DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://postgres:postgres_password@localhost:5432/postgres}
+      DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://postgres:postgres@localhost:5432/postgres}
       # Media settings
       MEDIA_URL=/media/
       EOF2
