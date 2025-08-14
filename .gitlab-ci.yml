@@ -159,7 +159,7 @@ deploy:production:
     - mkdir -p scripts
     # Deploy Nginx configuration
     - echo "Deploying Nginx configuration..."
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p /etc/nginx/sites-available"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled"
     - scp nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/nginx-config.conf
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo cp $PRODUCTION_PATH/nginx-config.conf /etc/nginx/sites-available/independently-thinking-human && sudo ln -sf /etc/nginx/sites-available/independently-thinking-human /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default && sudo nginx -t && sudo systemctl restart nginx"
     # Copy diagnostic scripts
