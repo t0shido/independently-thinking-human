@@ -162,6 +162,10 @@ deploy:production:
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled"
     - scp nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/nginx-config.conf
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo cp $PRODUCTION_PATH/nginx-config.conf /etc/nginx/sites-available/independently-thinking-human && sudo ln -sf /etc/nginx/sites-available/independently-thinking-human /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default && sudo nginx -t && sudo systemctl restart nginx"
+    # Deploy Gunicorn service
+    - echo "Deploying Gunicorn service..."
+    - scp systemd/gunicorn.service $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/gunicorn.service
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo cp $PRODUCTION_PATH/gunicorn.service /etc/systemd/system/gunicorn.service && sudo systemctl daemon-reload"
     # Copy diagnostic scripts
     - rsync -az scripts/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/scripts/
     # Create all necessary directories with proper permissions
