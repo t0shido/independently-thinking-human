@@ -1,16 +1,30 @@
 [Unit]
-Description=gunicorn daemon
-After=network.target
+Description=Independently Thinking Human Django App
+After=network.target postgresql.service
+Wants=postgresql.service
 
 [Service]
+Type=notify
 User=ubuntu
 Group=www-data
+RuntimeDirectory=gunicorn
 WorkingDirectory=/home/ubuntu/independently_thinking_human/django_backend
+Environment=PATH=/home/ubuntu/independently_thinking_human/django_backend/venv/bin
+EnvironmentFile=/home/ubuntu/independently_thinking_human/django_backend/.env
 ExecStart=/home/ubuntu/independently_thinking_human/django_backend/venv/bin/gunicorn \
           --access-logfile - \
+          --error-logfile - \
           --workers 3 \
-          --bind 127.0.0.1:8000 \
+          --bind unix:/run/gunicorn/socket \
+          --timeout 60 \
+          --keepalive 2 \
           blog_backend.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

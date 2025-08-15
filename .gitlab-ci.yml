@@ -11,6 +11,9 @@ variables:
   BACKEND_DIR: "django_backend"
   NODE_VERSION: "20"
   PYTHON_VERSION: "3.10"
+  # Default deployment path - can be overridden in GitLab variables
+  PRODUCTION_PATH: "/home/ubuntu/independently_thinking_human"
+  PRODUCTION_USER: "ubuntu"
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -75,7 +78,10 @@ backend:test:
     POSTGRES_DB: test_db
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
-    DATABASE_URL: "postgresql://postgres:${DB_PASSWORD}@localhost:5432/postgres"
+    DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/test_db"
+    DJANGO_SECRET_KEY: "test-secret-key-for-ci-only"
+    DEBUG: "True"
+    DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,testserver"
   script:
     - cd ${BACKEND_DIR}
     - pip install virtualenv
@@ -132,120 +138,158 @@ deploy:production:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    # Create a .env locally from CI variables and upload to server
-    - |
-      cat > .env.deploy <<EOF2
-      # Django settings
-      SECRET_KEY=${DJANGO_SECRET_KEY}
-      DEBUG=${DEBUG}
-      ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
-      CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
-      # Database settings - using postgres user and database
-      DATABASE_URL=${DATABASE_URL_WITH_PASSWORD:-postgresql://postgres:postgres@localhost:5432/postgres}
-      # Media settings
-      MEDIA_URL=/media/
-      EOF2
-    # Create all necessary directories on the server with proper permissions
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/django_backend $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH"
-    - scp .env.deploy $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/.env
-    # Debug: Check DATABASE_URL format (showing only the structure, not credentials)
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "grep 'DATABASE_URL' $PRODUCTION_PATH/django_backend/.env | sed -E 's/(.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'"
-    # Debug: Check file permissions on .env file
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "ls -la $PRODUCTION_PATH/django_backend/.env"
-    - rm -f .env.deploy
   script:
-    - echo "Deploying frontend (dist/) and Django backend to production server..."
-    # Create scripts directory for deployment scripts
-    - mkdir -p scripts
-    # Deploy Nginx configuration
-    - echo "Deploying Nginx configuration..."
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled"
-    - scp nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/nginx-config.conf
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo cp $PRODUCTION_PATH/nginx-config.conf /etc/nginx/sites-available/independently-thinking-human && sudo ln -sf /etc/nginx/sites-available/independently-thinking-human /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default && sudo nginx -t && sudo systemctl restart nginx"
-    # Deploy Gunicorn service
-    - echo "Deploying Gunicorn service..."
-    - scp systemd/gunicorn.service $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/gunicorn.service
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo cp $PRODUCTION_PATH/gunicorn.service /etc/systemd/system/gunicorn.service && sudo systemctl daemon-reload"
-    # Copy diagnostic scripts
-    - rsync -az scripts/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/scripts/
-    # Create all necessary directories with proper permissions
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "sudo mkdir -p $PRODUCTION_PATH $PRODUCTION_PATH/django_backend/{staticfiles,media} $PRODUCTION_PATH/frontend_dist && sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH && sudo chmod -R 755 $PRODUCTION_PATH || true"
-    - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
-    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH && chmod +x scripts/*.py"
-    # Create a deployment script to run on the server
+    - echo "🚀 Starting fully automated deployment..."
+    
+    # Create automated deployment script
     - |
-      cat > deploy.sh <<'EOFSCRIPT'
+      cat > auto_deploy.sh <<'DEPLOY_SCRIPT'
       #!/bin/bash
       set -e
+      
+      # Colors for output
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      NC='\033[0m' # No Color
+      
+      echo -e "${GREEN}🔧 Starting automated server setup...${NC}"
+      
+      # Update system packages
+      echo -e "${YELLOW}📦 Updating system packages...${NC}"
+      sudo apt-get update -qq
+      sudo apt-get upgrade -y
+      
+      # Install required packages
+      echo -e "${YELLOW}📋 Installing required packages...${NC}"
+      sudo apt-get install -y \
+        python3 \
+        python3-pip \
+        python3-venv \
+        python3-dev \
+        postgresql \
+        postgresql-contrib \
+        nginx \
+        git \
+        curl \
+        build-essential \
+        libpq-dev
+      
+      # Create project directory
+      echo -e "${YELLOW}📁 Setting up project directory...${NC}"
+      sudo mkdir -p $PRODUCTION_PATH
+      sudo chown -R $PRODUCTION_USER:$PRODUCTION_USER $PRODUCTION_PATH
+      cd $PRODUCTION_PATH
+      
+      # Setup PostgreSQL automatically
+      echo -e "${YELLOW}🗄️ Setting up PostgreSQL...${NC}"
+      sudo systemctl start postgresql
+      sudo systemctl enable postgresql
+      
+      # Generate secure database password
+      DB_PASSWORD=$(openssl rand -base64 32)
+      DB_NAME="independently_thinking_human"
+      DB_USER="app_user"
+      
+      # Create database and user
+      sudo -u postgres psql <<EOF
+      SELECT 'CREATE DATABASE $DB_NAME' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '$DB_NAME')\gexec
+      DO \$\$
+      BEGIN
+         IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = '$DB_USER') THEN
+            CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';
+         ELSE
+            ALTER USER $DB_USER WITH PASSWORD '$DB_PASSWORD';
+         END IF;
+      END
+      \$\$;
+      GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;
+      ALTER USER $DB_USER CREATEDB;
+      EOF
+      
+      # Configure PostgreSQL authentication
+      PG_HBA_PATH=$(sudo -u postgres psql -t -c "SHOW hba_file;" | xargs)
+      sudo cp "$PG_HBA_PATH" "$PG_HBA_PATH.backup"
+      if ! sudo grep -q "host.*$DB_NAME.*$DB_USER.*127.0.0.1/32.*md5" "$PG_HBA_PATH"; then
+          echo "host    $DB_NAME    $DB_USER    127.0.0.1/32    md5" | sudo tee -a "$PG_HBA_PATH"
+      fi
+      sudo systemctl reload postgresql
+      
+      # Create .env file with secure settings
+      echo -e "${YELLOW}⚙️ Creating secure environment configuration...${NC}"
+      mkdir -p django_backend
+      cat > django_backend/.env <<ENV_EOF
+      DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
+      DEBUG=False
+      DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS
+      CSRF_TRUSTED_ORIGINS=$CSRF_TRUSTED_ORIGINS
+      DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@localhost:5432/$DB_NAME
+      MEDIA_URL=/media/
+      ENV_EOF
+      
+      echo -e "${GREEN}✅ Server setup completed successfully!${NC}"
+      DEPLOY_SCRIPT
+    
+    # Upload and execute the deployment script
+    - chmod +x auto_deploy.sh
+    - scp auto_deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/auto_deploy.sh
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/auto_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH PRODUCTION_USER=$PRODUCTION_USER DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY' DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' /tmp/auto_deploy.sh"
+    
+    # Deploy application files
+    - echo "📂 Deploying application files..."
+    - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
+    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
+    
+    # Deploy configuration files
+    - echo "⚙️ Deploying configuration files..."
+    - rsync -az nginx.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/nginx.conf
+    - rsync -az systemd/ $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/systemd/
+    # Complete the application deployment
+    - |
+      cat > app_deploy.sh <<'APP_SCRIPT'
+      #!/bin/bash
+      set -e
+      
+      echo "🐍 Setting up Python application..."
       cd $PRODUCTION_PATH/django_backend
-      echo "Installing dependencies..."
-      sudo apt-get update && sudo apt-get install -y python3-venv python3-full
-      echo "Setting up Python virtual environment..."
-      rm -rf venv
+      
+      # Create virtual environment
       python3 -m venv venv
       ./venv/bin/pip install --upgrade pip
       ./venv/bin/pip install -r requirements.txt
-      echo "Collecting static files..."
+      
+      # Run Django setup
+      echo "🔧 Running Django migrations and static files..."
+      export $(grep -v '^#' .env | xargs)
+      ./venv/bin/python manage.py migrate --noinput
       ./venv/bin/python manage.py collectstatic --noinput
       
-      # Ensure .env file exists
-      if [ ! -f .env ]; then
-        echo 'ERROR: .env file not found!'
-        exit 1
-      fi
+      # Configure Nginx
+      echo "🌐 Configuring Nginx..."
+      sudo mv /tmp/nginx.conf /etc/nginx/sites-available/independently_thinking_human
+      sudo ln -sf /etc/nginx/sites-available/independently_thinking_human /etc/nginx/sites-enabled/
+      sudo rm -f /etc/nginx/sites-enabled/default
+      sudo nginx -t
       
-      # Check for database configuration
-      echo 'Content of .env file (credentials masked):'
-      cat .env | grep -v "PASSWORD\|SECRET" || cat .env | sed -E 's/(DATABASE_URL=.+:\/\/).+:.+@(.+)/\1USERNAME:PASSWORD@\2/'
+      # Configure systemd services
+      echo "⚙️ Setting up systemd services..."
+      sudo mv /tmp/systemd/*.service /etc/systemd/system/
+      sudo systemctl daemon-reload
       
-      # Check if DATABASE_URL exists in the .env file
-      if grep -q 'DATABASE_URL' .env; then
-        echo 'Using database configuration from .env file'
-        
-        # Export environment variables from .env to make them available to Python scripts
-        export $(grep -v '^#' .env | xargs)
-        
-        echo 'Checking DATABASE_URL environment variable'
-        ./venv/bin/python ../scripts/check_db_url.py
-        
-        echo 'Testing database connection'
-        ./venv/bin/python ../scripts/test_db_connection.py
-        
-        echo 'Checking Django settings'
-        ./venv/bin/python ../scripts/check_django_settings.py
-        
-        # Check PostgreSQL connection directly
-        echo 'Testing PostgreSQL connection directly'
-        if command -v psql &> /dev/null; then
-          DB_URL=$(grep DATABASE_URL .env | cut -d '=' -f2-)
-          if [[ $DB_URL == postgresql://* ]]; then
-            DB_USER=$(echo $DB_URL | sed -E 's/postgresql:\/\/([^:]+).*/\1/')
-            DB_HOST=$(echo $DB_URL | sed -E 's/.*@([^:]+).*/\1/')
-            DB_NAME=$(echo $DB_URL | sed -E 's/.*\/([^?]+).*/\1/')
-            echo "Attempting direct psql connection as $DB_USER to $DB_HOST/$DB_NAME"
-            PGPASSWORD=$(echo $DB_URL | sed -E 's/.*:([^@]+)@.*/\1/') psql -U $DB_USER -h $DB_HOST -d $DB_NAME -c "\l" || echo "Direct psql connection failed"
-          else
-            echo "DATABASE_URL not in expected postgresql:// format"
-          fi
-        else
-          echo "psql command not available"
-        fi
-        
-        echo 'Running migrations'
-        ./venv/bin/python manage.py migrate --verbosity 3 --noinput || echo 'Migration failed but continuing deployment'
-      else
-        echo 'ERROR: DATABASE_URL not found in .env file, skipping migrations'
-      fi
+      # Start services
+      echo "🚀 Starting services..."
+      sudo systemctl enable gunicorn
+      sudo systemctl start gunicorn
+      sudo systemctl enable nginx
+      sudo systemctl restart nginx
       
-      echo "Restarting services..."
-      sudo systemctl restart gunicorn
-      sudo systemctl reload nginx
-      echo "Deployment completed."
-      EOFSCRIPT
-    - chmod +x deploy.sh
-    - scp deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/deploy.sh
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd $PRODUCTION_PATH && chmod +x deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH ./deploy.sh"
+      echo "✅ Deployment completed successfully!"
+      echo "🌍 Your application should be available at your server's IP address"
+      APP_SCRIPT
+    
+    - chmod +x app_deploy.sh
+    - scp app_deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/app_deploy.sh
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/app_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH /tmp/app_deploy.sh"
 
   when: manual
   only:
