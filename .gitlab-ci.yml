@@ -242,7 +242,7 @@ deploy:production:
     
     # Deploy configuration files
     - echo "⚙️ Deploying configuration files..."
-    - rsync -az nginx.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/nginx.conf
+    - rsync -az nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/nginx.conf
     - rsync -az systemd/ $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/systemd/
     # Complete the application deployment
     - |
