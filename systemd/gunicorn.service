@@ -17,7 +17,7 @@ ExecStart=/home/ubuntu/independently_thinking_human/app_backend/venv/bin/gunicor
           --workers 3 \
           --bind unix:/run/gunicorn/socket \
           --timeout 60 \
-          --keepalive 2 \
+          --keep-alive 2 \
           --pythonpath /home/ubuntu/independently_thinking_human/app_backend \
           blog_backend.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
