@@ -291,9 +291,18 @@ deploy:production:
       venv/bin/pip install --upgrade pip
       venv/bin/pip install -r requirements.txt
       
+      # Create .env file with environment variables
+      echo "🔧 Creating .env file..."
+      cat > .env <<EOF
+DJANGO_SECRET_KEY='${DJANGO_SECRET_KEY}'
+DJANGO_ALLOWED_HOSTS='${DJANGO_ALLOWED_HOSTS}'
+CSRF_TRUSTED_ORIGINS='${CSRF_TRUSTED_ORIGINS}'
+DEBUG=${DEBUG}
+DATABASE_URL='${DATABASE_URL_WITH_PASSWORD}'
+EOF
+      
       # Run Django setup
       echo "🔧 Running Django migrations and static files..."
-      export $(grep -v '^#' .env | xargs)
       ./venv/bin/python manage.py migrate --noinput
       ./venv/bin/python manage.py collectstatic --noinput
       
@@ -322,7 +331,7 @@ deploy:production:
     
     - chmod +x app_deploy.sh
     - scp app_deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/app_deploy.sh
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/app_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH /tmp/app_deploy.sh"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/app_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY' DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' DEBUG=$DEBUG DATABASE_URL_WITH_PASSWORD='$DATABASE_URL_WITH_PASSWORD' /tmp/app_deploy.sh"
 
   when: manual
   only:
