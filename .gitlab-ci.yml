@@ -262,10 +262,34 @@ deploy:production:
         exit 1
       fi
       
-      # Create virtual environment
+      # Check Python version and location
+      echo "Python version:"
+      python3 --version
+      which python3
+      
+      # Create virtual environment with better error handling
+      echo "Creating virtual environment..."
+      if [ -d "venv" ]; then
+        echo "Removing existing virtual environment"
+        rm -rf venv
+      fi
+      
       python3 -m venv venv
-      ./venv/bin/pip install --upgrade pip
-      ./venv/bin/pip install -r requirements.txt
+      
+      # Verify venv was created
+      if [ ! -f "venv/bin/python3" ]; then
+        echo "Error: Virtual environment creation failed!"
+        echo "Checking venv directory:"
+        ls -la venv
+        echo "Trying alternative approach..."
+        python3 -m pip install virtualenv
+        python3 -m virtualenv venv
+      fi
+      
+      # Install dependencies
+      echo "Installing dependencies..."
+      venv/bin/pip install --upgrade pip
+      venv/bin/pip install -r requirements.txt
       
       # Run Django setup
       echo "🔧 Running Django migrations and static files..."
