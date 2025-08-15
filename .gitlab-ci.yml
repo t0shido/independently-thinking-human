@@ -290,6 +290,8 @@ deploy:production:
       echo "Installing dependencies..."
       venv/bin/pip install --upgrade pip
       venv/bin/pip install -r requirements.txt
+      echo "Installing Gunicorn..."
+      venv/bin/pip install gunicorn
       
       # Create .env file with environment variables
       echo "🔧 Creating .env file..."

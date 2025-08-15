@@ -8,10 +8,10 @@ Type=notify
 User=ubuntu
 Group=www-data
 RuntimeDirectory=gunicorn
-WorkingDirectory=/home/ubuntu/independently_thinking_human/django_backend
-Environment=PATH=/home/ubuntu/independently_thinking_human/django_backend/venv/bin
-EnvironmentFile=/home/ubuntu/independently_thinking_human/django_backend/.env
-ExecStart=/home/ubuntu/independently_thinking_human/django_backend/venv/bin/gunicorn \
+WorkingDirectory=/home/ubuntu/independently_thinking_human/app_backend
+Environment=PATH=/home/ubuntu/independently_thinking_human/app_backend/venv/bin
+EnvironmentFile=/home/ubuntu/independently_thinking_human/app_backend/.env
+ExecStart=/home/ubuntu/independently_thinking_human/app_backend/venv/bin/gunicorn \
           --access-logfile - \
           --error-logfile - \
           --workers 3 \
