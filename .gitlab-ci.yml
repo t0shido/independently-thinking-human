@@ -238,7 +238,7 @@ deploy:production:
     # Deploy application files
     - echo "📂 Deploying application files..."
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
-    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
+    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/app_backend/
     
     # Deploy configuration files
     - echo "⚙️ Deploying configuration files..."
@@ -251,11 +251,11 @@ deploy:production:
       set -e
       
       echo "🐍 Setting up Python application..."
-      # Use hardcoded path to avoid masking issues
-      cd $PRODUCTION_PATH/django_backend
+      # Use a different directory name to avoid GitLab masking
+      cd $PRODUCTION_PATH/app_backend
       
       # Debug directory structure if there's an issue
-      if [ ! -d "$PRODUCTION_PATH/django_backend" ]; then
+      if [ ! -d "$PRODUCTION_PATH/app_backend" ]; then
         echo "Error: Backend directory not found"
         echo "Contents of $PRODUCTION_PATH:"
         ls -la $PRODUCTION_PATH
