@@ -318,10 +318,20 @@ deploy:production:
       sudo mv /tmp/systemd/*.service /etc/systemd/system/
       sudo systemctl daemon-reload
       
+      # Debug checks
+      echo "🔍 Debugging checks..."
+      echo "Checking for wsgi.py file..."
+      ls -la $PRODUCTION_PATH/app_backend/blog_backend/
+      echo "Checking Python path..."
+      echo "PYTHONPATH=$PYTHONPATH"
+      
       # Start services
       echo "🚀 Starting services..."
       sudo systemctl enable gunicorn
-      sudo systemctl start gunicorn
+      sudo systemctl start gunicorn || {
+        echo "❌ Gunicorn service failed to start. Checking logs..."
+        sudo journalctl -xeu gunicorn.service --no-pager | tail -n 50
+      }
       sudo systemctl enable nginx
       sudo systemctl restart nginx
       
