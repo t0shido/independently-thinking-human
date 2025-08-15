@@ -238,7 +238,8 @@ deploy:production:
     # Deploy application files
     - echo "📂 Deploying application files..."
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
-    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
+    - BACKEND_PATH="django_backend"
+    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/$BACKEND_PATH/
     
     # Deploy configuration files
     - echo "⚙️ Deploying configuration files..."
@@ -251,7 +252,14 @@ deploy:production:
       set -e
       
       echo "🐍 Setting up Python application..."
-      cd $PRODUCTION_PATH/django_backend
+      # Ensure the backend directory exists and is accessible
+      BACKEND_DIR="$PRODUCTION_PATH/django_backend"
+      if [ ! -d "$BACKEND_DIR" ]; then
+        echo "Error: Backend directory $BACKEND_DIR does not exist"
+        ls -la $PRODUCTION_PATH
+        exit 1
+      fi
+      cd $BACKEND_DIR
       
       # Create virtual environment
       python3 -m venv venv
