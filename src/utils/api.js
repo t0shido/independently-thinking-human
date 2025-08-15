@@ -1,6 +1,7 @@
 // API service for communicating with the Django backend
 
-const API_URL = 'http://127.0.0.1:8000/api';
+// Use relative URL in production, fallback to localhost in development
+const API_URL = '/api';
 
 // Get all articles from a section
 export const getArticles = async (section) => {
