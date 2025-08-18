@@ -1,8 +1,8 @@
 // API service for communicating with the Django backend
+import config from '../config';
 
-// Use relative URL in production, full URL in development
-// Always use the full URL with explicit protocol to avoid connectivity issues
-const API_URL = 'http://127.0.0.1:8000/api';
+// Use the environment-aware API URL from config.js
+const API_URL = config.api.baseUrl;
 
 // Get all articles from a section
 export const getArticles = async (section) => {
