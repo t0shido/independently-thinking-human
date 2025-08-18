@@ -37,7 +37,7 @@ CREATE TABLE public.articles_article (
 );
 
 
-ALTER TABLE public.articles_article OWNER TO toshi;
+ALTER TABLE public.articles_article OWNER TO postgres;
 
 --
 -- Name: articles_article_id_seq; Type: SEQUENCE; Schema: public; Owner: toshi
@@ -64,7 +64,7 @@ CREATE TABLE public.articles_section (
 );
 
 
-ALTER TABLE public.articles_section OWNER TO toshi;
+ALTER TABLE public.articles_section OWNER TO postgres;
 
 --
 -- Name: articles_section_id_seq; Type: SEQUENCE; Schema: public; Owner: toshi
@@ -90,7 +90,7 @@ CREATE TABLE public.articles_tag (
 );
 
 
-ALTER TABLE public.articles_tag OWNER TO toshi;
+ALTER TABLE public.articles_tag OWNER TO postgres;
 
 --
 -- Name: articles_tag_articles; Type: TABLE; Schema: public; Owner: toshi
@@ -103,7 +103,7 @@ CREATE TABLE public.articles_tag_articles (
 );
 
 
-ALTER TABLE public.articles_tag_articles OWNER TO toshi;
+ALTER TABLE public.articles_tag_articles OWNER TO postgres;
 
 --
 -- Name: articles_tag_articles_id_seq; Type: SEQUENCE; Schema: public; Owner: toshi
