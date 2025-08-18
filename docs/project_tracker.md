@@ -4,7 +4,7 @@
 - **Project Name**: Independently Thinking Human
 - **Project Path**: `/Users/toshi/Desktop/Projects/Coding/independently_thinking_human/`
 - **Description**: A full-stack application with a philosophical focus on balancing between Order and Chaos while navigating through Life's Complexities
-- **Last Updated**: August 12, 2025
+- **Last Updated**: August 18, 2025
 
 ## Project Structure
 
@@ -34,6 +34,7 @@
 ## Completed Tasks
 | Date | Task | Description | Status |
 |------|------|-------------|--------|
+| 2025-08-18 | Fixed article image loading | Implemented environment-aware configuration for API and media URLs; updated image URL construction to work in both development and production environments without manual changes. | Done |
 | 2025-08-12 | Nginx routing finalized | Serve SPA at `/` from `/home/ubuntu/independently_thinking_human/frontend_dist`; proxy Django API under `/api/` to Gunicorn socket; keep `/static/` and `/media/` aliases; HTTPS with Let’s Encrypt. | Done |
 | 2025-08-12 | CI/CD: frontend build + deploy | `frontend:build` produces `dist/`; deploy job rsyncs `${FRONTEND_DIR}/dist/` to `/home/ubuntu/independently_thinking_human/frontend_dist`. | Done |
 | 2025-08-12 | CI/CD: backend deploy | Deploy job rsyncs `django_backend/` to `/home/ubuntu/independently_thinking_human/django_backend`, ensures dirs, sets up venv, installs requirements, runs `collectstatic` and `migrate`, restarts Gunicorn and reloads Nginx. | Done |
@@ -64,7 +65,7 @@
 | GitLab CI template running | GitLab repo initially had sample template, not real pipeline, causing failed deploys. | In progress | Clean `.gitlab-ci.yml` prepared (adds artifacts needs + server .env upload). Push via MR to `main` or temporarily allow force-push, then run pipeline. |
 | Frontend deployed via GitHub, backend via Lightsail | Site is online from GitHub flow but backend deploy isn’t driven by GitLab yet. | In progress | Keep GitHub deploy for SPA; finish GitLab deploy for backend and static/media; confirm Nginx serves SPA and proxies `/api`. |
 | DB password rotated | PostgreSQL password changed; backend can’t connect. | Blocking | Update backend environment `DATABASE_URL` on server (systemd Environment/EnvironmentFile or project `.env`) and in GitLab CI variable; restart Gunicorn; verify with `psql`. |
-| API calls from SPA | SPA may not hit `/api` base or CORS/CSRF not aligned. | To verify | Prefer relative base `/api`; if cross-domain, enable `django-cors-headers`, set `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS`. |
+| API calls from SPA | SPA may not hit `/api` base or CORS/CSRF not aligned. | Resolved | Implemented environment-aware configuration that uses full URLs in development and relative URLs in production. Added CORS headers in Django for development. |}
 
 ## Resources
 - Project GitHub repository: (Add link if available)
@@ -96,7 +97,7 @@
   - or project `.env`: `/home/ubuntu/independently_thinking_human/django_backend/.env` add/update `DATABASE_URL=...`, then restart service.
 - Update GitLab CI/CD variable `DATABASE_URL` to the same new value so future deploys keep it.
 - Verify backend: `journalctl -u <service> -n 200 --no-pager`; run `python manage.py migrate --noinput` after venv activate if needed.
-- Frontend API base: ensure SPA uses `/api` (Vite `VITE_API_BASE_URL=/api` for prod or relative paths in code).
+- ~~Frontend API base: ensure SPA uses `/api`~~ (Completed: Implemented environment-aware configuration for API and media URLs)
 - Merge cleaned `.gitlab-ci.yml` to GitLab `main`; rerun pipeline; approve manual deploy.
 
 ---
