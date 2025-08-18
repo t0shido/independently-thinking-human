@@ -1,16 +1,34 @@
 // API service for communicating with the Django backend
 
-// Use relative URL in production, fallback to localhost in development
-const API_URL = '/api';
+// Use relative URL in production, full URL in development
+// Always use the full URL with explicit protocol to avoid connectivity issues
+const API_URL = 'http://127.0.0.1:8000/api';
 
 // Get all articles from a section
 export const getArticles = async (section) => {
   try {
-    const response = await fetch(`${API_URL}/articles/${section}/`);
+    console.log(`Fetching articles from: ${API_URL}/articles/${section}/`);
+    
+    // Add explicit CORS mode and credentials
+    const response = await fetch(`${API_URL}/articles/${section}/`, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+      }
+    });
+    
+    console.log('Response status:', response.status);
+    console.log('Response headers:', [...response.headers.entries()]);
+    
     if (!response.ok) {
-      throw new Error('Failed to fetch articles');
+      throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
     }
-    return await response.json();
+    
+    const data = await response.json();
+    console.log(`Successfully fetched ${data.length} articles for section: ${section}`);
+    return data;
   } catch (error) {
     console.error('Error fetching articles:', error);
     throw error;

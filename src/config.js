@@ -6,8 +6,15 @@
 const config = {
   // API configuration
   api: {
-    // Base URL for the Django backend API
-    baseUrl: '/api',
+    // Base URL for the Django backend API - environment-aware
+    baseUrl: (() => {
+      // Development environment
+      if (window.location.hostname === 'localhost') {
+        return 'http://127.0.0.1:8000/api';
+      }
+      // Production environment
+      return '/api';
+    })(),
     
     // Whether to use the API or local JSON files
     // Set to false to use local JSON files (fallback mode)
@@ -31,8 +38,15 @@ const config = {
     // Sections available in the library
     sections: ['mindset', 'politics', 'economics', 'technology', 'health', 'stories'],
     
-    // Media URL for images
-    mediaUrl: '/media',
+    // Media URL for images - environment-aware
+    mediaUrl: (() => {
+      // Development environment
+      if (window.location.hostname === 'localhost') {
+        return 'http://127.0.0.1:8000/media';
+      }
+      // Production environment
+      return '/media';
+    })(),
   }
 };
 
