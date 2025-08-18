@@ -309,11 +309,11 @@ sync:database:
       
       echo -e "${GREEN}🔒 Creating backup of production database...${NC}"
       BACKUP_FILE="db_backup_$(date +%Y%m%d_%H%M%S).sql"
-      pg_dump independently_thinking_human > ~/$BACKUP_FILE
+      sudo -u postgres pg_dump independently_thinking_human > ~/$BACKUP_FILE
       echo -e "${GREEN}✅ Backup created: ~/$BACKUP_FILE${NC}"
       
       echo -e "${YELLOW}📥 Applying content dump to production database...${NC}"
-      psql independently_thinking_human < /tmp/content_dump.sql
+      sudo -u postgres psql independently_thinking_human < /tmp/content_dump.sql
       
       echo -e "${GREEN}✅ Database content synchronized successfully!${NC}"
       SYNC_SCRIPT
