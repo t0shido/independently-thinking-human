@@ -144,10 +144,7 @@ deploy:production:
       sudo systemctl reload postgresql
       
       # Create .env file with secure settings
-      echo -e "${YELLOW}⚙️ Creating secure environment configuration...${NC}"
-      mkdir -p django_backend
-      cat > django_backend/.env <<ENV_EOF
-      DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
+      cat > .env <<ENV_EOF
       DEBUG=False
       DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS
       CSRF_TRUSTED_ORIGINS=$CSRF_TRUSTED_ORIGINS
@@ -161,15 +158,13 @@ deploy:production:
     # Upload and execute the deployment script
     - chmod +x auto_deploy.sh
     - scp auto_deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/auto_deploy.sh
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/auto_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH PRODUCTION_USER=$PRODUCTION_USER DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY' DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' /tmp/auto_deploy.sh"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/auto_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' /tmp/auto_deploy.sh"
     
-    # Deploy application files
-    - echo "📂 Deploying application files..."
+    # Upload application files
+    - echo "📦 Uploading application files..."
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/frontend_dist $PRODUCTION_PATH/app_backend"
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
-    - rsync -az --delete ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/app_backend/
-    
-    # Deploy configuration files
-    - echo "⚙️ Deploying configuration files..."
+    - rsync -az --delete --exclude 'media/' --exclude 'venv/' --exclude '*.pyc' --exclude '__pycache__/' ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/app_backend/
     - rsync -az nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/nginx.conf
     - rsync -az systemd/ $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/systemd/
     # Complete the application deployment
@@ -278,10 +273,10 @@ deploy:production:
     name: production
     url: https://your-domain.com
 
-# Database synchronization job
+# Database synchronization job - updated approach
 sync:database:
   stage: sync
-  image: postgres:14-alpine
+  image: alpine:latest
   before_script:
     - apk add --no-cache openssh-client rsync
     - eval $(ssh-agent -s)
@@ -292,6 +287,14 @@ sync:database:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - echo "🔄 Starting database synchronization..."
+    
+    # Check if content dump exists
+    - if [ ! -f "${BACKEND_DIR}/content_dump.sql" ]; then
+        echo "❌ Content dump file not found at ${BACKEND_DIR}/content_dump.sql";
+        echo "Please run the following command locally before triggering this job:";
+        echo "pg_dump -h localhost -U toshi -t articles_article -t articles_category -t articles_tag independently_thinking_human > django_backend/content_dump.sql";
+        exit 1;
+      fi
     
     # Create database sync script
     - |
@@ -315,14 +318,11 @@ sync:database:
       echo -e "${GREEN}✅ Database content synchronized successfully!${NC}"
       SYNC_SCRIPT
     
-    # Create local content dump
-    - echo "📤 Creating content dump from local database..."
-    - PGPASSWORD=$LOCAL_DB_PASSWORD pg_dump -h $LOCAL_DB_HOST -U $LOCAL_DB_USER -t articles_article -t articles_category -t articles_tag independently_thinking_human > content_dump.sql
-    
-    # Upload and execute sync script
+    # Upload content dump and sync script
+    - echo "📤 Uploading content dump to production server..."
+    - scp ${BACKEND_DIR}/content_dump.sql $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/content_dump.sql
     - chmod +x db_sync.sh
     - scp db_sync.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/db_sync.sh
-    - scp content_dump.sql $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/content_dump.sql
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/db_sync.sh && /tmp/db_sync.sh"
     
     # Sync media files
