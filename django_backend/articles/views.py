@@ -5,9 +5,13 @@ from django.shortcuts import get_object_or_404
 from .models import Article, Section, Tag
 from .serializers import ArticleSerializer
 import os
+import logging
 from django.conf import settings
 from django.utils.text import slugify
 from datetime import date
+
+# Set up logger
+logger = logging.getLogger(__name__)
 
 class ArticleViewSet(viewsets.ViewSet):
     """
@@ -20,11 +24,23 @@ class ArticleViewSet(viewsets.ViewSet):
         Get all articles from a specific section
         Endpoint: GET /api/articles/:section
         """
+        logger.info(f"API CALL: list articles - section={section}, user_agent={request.META.get('HTTP_USER_AGENT')}, ip={request.META.get('REMOTE_ADDR')}")
+        
         if section:
-            section_obj = get_object_or_404(Section, slug=section)
-            articles = Article.objects.filter(section=section_obj)
-            serializer = ArticleSerializer(articles, many=True, context={'request': request})
-            return Response(serializer.data)
+            try:
+                section_obj = get_object_or_404(Section, slug=section)
+                logger.info(f"Database: Found section {section} with ID {section_obj.id}")
+                
+                articles = Article.objects.filter(section=section_obj)
+                logger.info(f"Database: Retrieved {articles.count()} articles from section {section}")
+                
+                serializer = ArticleSerializer(articles, many=True, context={'request': request})
+                return Response(serializer.data)
+            except Exception as e:
+                logger.error(f"Error retrieving articles for section {section}: {str(e)}")
+                return Response({"error": f"Error retrieving articles: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        logger.warning("API Error: Section parameter required but not provided")
         return Response({"error": "Section parameter required"}, status=status.HTTP_400_BAD_REQUEST)
     
     def create(self, request):

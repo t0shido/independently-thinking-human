@@ -14,8 +14,11 @@ WorkingDirectory=/home/ubuntu/independently_thinking_human/django_backend
 Environment=PATH=/home/ubuntu/independently_thinking_human/django_backend/venv/bin
 EnvironmentFile=/home/ubuntu/independently_thinking_human/django_backend/.env
 ExecStart=/home/ubuntu/independently_thinking_human/django_backend/venv/bin/gunicorn \
-          --access-logfile - \
-          --error-logfile - \
+          --access-logfile /home/ubuntu/independently_thinking_human/django_backend/logs/gunicorn-access.log \
+          --error-logfile /home/ubuntu/independently_thinking_human/django_backend/logs/gunicorn-error.log \
+          --log-level debug \
+          --capture-output \
+          --enable-stdio-inheritance \
           --workers 3 \
           --bind unix:/run/gunicorn/socket \
           --timeout 60 \
