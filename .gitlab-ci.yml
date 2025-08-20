@@ -252,8 +252,8 @@ deploy:production:
       
       # Configure Nginx
       echo "🌐 Configuring Nginx..."
-      sudo mv /tmp/independently-thinking-human.conf /etc/nginx/sites-available/independently-thinking-human
-      sudo ln -sf /etc/nginx/sites-available/independently-thinking-human /etc/nginx/sites-enabled/
+      sudo mv /tmp/independently-thinking-human.conf /etc/nginx/sites-available/independently-thinking-human.conf
+      sudo ln -sf /etc/nginx/sites-available/independently-thinking-human.conf /etc/nginx/sites-enabled/independently-thinking-human.conf
       sudo rm -f /etc/nginx/sites-enabled/default
       sudo nginx -t
       
