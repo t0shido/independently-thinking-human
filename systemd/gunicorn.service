@@ -8,17 +8,17 @@ Type=notify
 User=ubuntu
 Group=www-data
 RuntimeDirectory=gunicorn
-WorkingDirectory=/home/ubuntu/independently_thinking_human/app_backend
-Environment=PATH=/home/ubuntu/independently_thinking_human/app_backend/venv/bin
-EnvironmentFile=/home/ubuntu/independently_thinking_human/app_backend/.env
-ExecStart=/home/ubuntu/independently_thinking_human/app_backend/venv/bin/gunicorn \
+WorkingDirectory=/home/ubuntu/independently_thinking_human/django_backend
+Environment=PATH=/home/ubuntu/independently_thinking_human/django_backend/venv/bin
+EnvironmentFile=/home/ubuntu/independently_thinking_human/django_backend/.env
+ExecStart=/home/ubuntu/independently_thinking_human/django_backend/venv/bin/gunicorn \
           --access-logfile - \
           --error-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn/socket \
           --timeout 60 \
           --keep-alive 2 \
-          --pythonpath /home/ubuntu/independently_thinking_human/app_backend \
+          --pythonpath /home/ubuntu/independently_thinking_human/django_backend \
           blog_backend.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed

@@ -162,9 +162,9 @@ deploy:production:
     
     # Upload application files
     - echo "📦 Uploading application files..."
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/frontend_dist $PRODUCTION_PATH/app_backend"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/frontend_dist $PRODUCTION_PATH/django_backend"
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
-    - rsync -az --delete --exclude 'media/' --exclude 'venv/' --exclude '*.pyc' --exclude '__pycache__/' ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/app_backend/
+    - rsync -az --delete --exclude 'media/' --exclude 'venv/' --exclude '*.pyc' --exclude '__pycache__/' ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/
     - rsync -az nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/independently-thinking-human.conf
     - rsync -az systemd/ $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/systemd/
     # Complete the application deployment
@@ -175,10 +175,10 @@ deploy:production:
       
       echo "🐍 Setting up Python application..."
       # Use a different directory name to avoid GitLab masking
-      cd $PRODUCTION_PATH/app_backend
+      cd $PRODUCTION_PATH/django_backend
       
       # Debug directory structure if there's an issue
-      if [ ! -d "$PRODUCTION_PATH/app_backend" ]; then
+      if [ ! -d "$PRODUCTION_PATH/django_backend" ]; then
         echo "Error: Backend directory not found"
         echo "Contents of $PRODUCTION_PATH:"
         ls -la $PRODUCTION_PATH
@@ -244,7 +244,7 @@ deploy:production:
       # Debug checks
       echo "🔍 Debugging checks..."
       echo "Checking for wsgi.py file..."
-      ls -la $PRODUCTION_PATH/app_backend/blog_backend/
+      ls -la $PRODUCTION_PATH/django_backend/blog_backend/
       echo "Checking Python path..."
       echo "PYTHONPATH=$PYTHONPATH"
       
@@ -327,7 +327,7 @@ sync:database:
     
     # Sync media files
     - echo "🖼️ Syncing media files..."
-    - rsync -avz ${BACKEND_DIR}/media/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/app_backend/media/
+    - rsync -avz ${BACKEND_DIR}/media/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/django_backend/media/
     
     - echo "🔄 Database and media synchronization completed!"
   when: manual  # Requires manual trigger for safety
