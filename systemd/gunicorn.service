@@ -19,7 +19,6 @@ ExecStart=/home/ubuntu/independently_thinking_human/django_backend/venv/bin/guni
           --bind unix:/run/gunicorn/socket \
           --timeout 60 \
           --keep-alive 2 \
-          --pythonpath /home/ubuntu/independently_thinking_human/django_backend \
           blog_backend.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
