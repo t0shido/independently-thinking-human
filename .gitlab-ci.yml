@@ -165,7 +165,7 @@ deploy:production:
     - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "mkdir -p $PRODUCTION_PATH/frontend_dist $PRODUCTION_PATH/app_backend"
     - rsync -az --delete ${FRONTEND_DIR}/dist/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/frontend_dist/
     - rsync -az --delete --exclude 'media/' --exclude 'venv/' --exclude '*.pyc' --exclude '__pycache__/' ${BACKEND_DIR}/ $PRODUCTION_USER@$PRODUCTION_SERVER:$PRODUCTION_PATH/app_backend/
-    - rsync -az nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/nginx.conf
+    - rsync -az nginx/independently-thinking-human.conf $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/independently-thinking-human.conf
     - rsync -az systemd/ $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/systemd/
     # Complete the application deployment
     - |
@@ -231,8 +231,8 @@ deploy:production:
       
       # Configure Nginx
       echo "🌐 Configuring Nginx..."
-      sudo mv /tmp/nginx.conf /etc/nginx/sites-available/independently_thinking_human
-      sudo ln -sf /etc/nginx/sites-available/independently_thinking_human /etc/nginx/sites-enabled/
+      sudo mv /tmp/independently-thinking-human.conf /etc/nginx/sites-available/independently-thinking-human
+      sudo ln -sf /etc/nginx/sites-available/independently-thinking-human /etc/nginx/sites-enabled/
       sudo rm -f /etc/nginx/sites-enabled/default
       sudo nginx -t
       
