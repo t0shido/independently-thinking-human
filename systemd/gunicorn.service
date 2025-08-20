@@ -13,6 +13,9 @@ RuntimeDirectoryMode=0755
 WorkingDirectory=/home/ubuntu/independently_thinking_human/django_backend
 Environment=PATH=/home/ubuntu/independently_thinking_human/django_backend/venv/bin
 EnvironmentFile=/home/ubuntu/independently_thinking_human/django_backend/.env
+ExecStartPre=/bin/mkdir -p /home/ubuntu/independently_thinking_human/django_backend/logs
+ExecStartPre=/bin/chown -R ubuntu:www-data /home/ubuntu/independently_thinking_human/django_backend/logs
+ExecStartPre=/bin/chmod -R 755 /home/ubuntu/independently_thinking_human/django_backend/logs
 ExecStart=/home/ubuntu/independently_thinking_human/django_backend/venv/bin/gunicorn \
           --access-logfile /home/ubuntu/independently_thinking_human/django_backend/logs/gunicorn-access.log \
           --error-logfile /home/ubuntu/independently_thinking_human/django_backend/logs/gunicorn-error.log \
