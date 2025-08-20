@@ -60,6 +60,22 @@ deploy:production:
   needs: ["frontend:build", "backend:build"]
   before_script:
     - apk add --no-cache openssh-client rsync
+    # Validate required variables
+    - |
+      echo "🔍 Validating required GitLab CI/CD variables..."
+      MISSING_VARS=""
+      [ -z "$SSH_PRIVATE_KEY" ] && MISSING_VARS="$MISSING_VARS SSH_PRIVATE_KEY"
+      [ -z "$SSH_KNOWN_HOSTS" ] && MISSING_VARS="$MISSING_VARS SSH_KNOWN_HOSTS"
+      [ -z "$PRODUCTION_SERVER" ] && MISSING_VARS="$MISSING_VARS PRODUCTION_SERVER"
+      [ -z "$DJANGO_SECRET_KEY" ] && MISSING_VARS="$MISSING_VARS DJANGO_SECRET_KEY"
+      [ -z "$DJANGO_ALLOWED_HOSTS" ] && MISSING_VARS="$MISSING_VARS DJANGO_ALLOWED_HOSTS"
+      [ -z "$CSRF_TRUSTED_ORIGINS" ] && MISSING_VARS="$MISSING_VARS CSRF_TRUSTED_ORIGINS"
+      if [ ! -z "$MISSING_VARS" ]; then
+        echo "❌ Missing required GitLab CI/CD variables:$MISSING_VARS"
+        echo "Please set these variables in GitLab Project → Settings → CI/CD → Variables"
+        exit 1
+      fi
+      echo "✅ All required variables are present"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
@@ -114,8 +130,14 @@ deploy:production:
       sudo systemctl start postgresql
       sudo systemctl enable postgresql
       
-      # Generate secure database password
-      DB_PASSWORD=$(openssl rand -base64 32)
+      # Use GitLab variable for database password or generate if not provided
+      if [ -z "$DATABASE_PASSWORD" ]; then
+        DB_PASSWORD=$(openssl rand -base64 32)
+        echo "⚠️  Generated random database password. Consider setting DATABASE_PASSWORD variable for consistency."
+      else
+        DB_PASSWORD="$DATABASE_PASSWORD"
+        echo "✅ Using provided database password from GitLab variables"
+      fi
       DB_NAME="independently_thinking_human"
       DB_USER="app_user"
       
@@ -213,8 +235,7 @@ deploy:production:
       echo "Installing dependencies..."
       venv/bin/pip install --upgrade pip
       venv/bin/pip install -r requirements.txt
-      echo "Installing Gunicorn..."
-      venv/bin/pip install gunicorn
+      # Gunicorn is now included in requirements.txt
       
       # Create .env file with environment variables
       echo "🔧 Creating .env file..."

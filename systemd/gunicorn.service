@@ -2,6 +2,7 @@
 Description=Independently Thinking Human Django App
 After=network.target postgresql.service
 Wants=postgresql.service
+Requires=gunicorn.socket
 
 [Service]
 Type=notify
