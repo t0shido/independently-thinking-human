@@ -273,37 +273,66 @@ deploy:production:
       # Start services
       echo "🚀 Starting services..."
       
+      # Stop any existing services first
+      echo "Stopping any existing gunicorn services..."
+      sudo systemctl stop gunicorn.socket || true
+      sudo systemctl stop gunicorn.service || true
+      
+      # Clean up any existing socket files
+      echo "Cleaning up existing socket files..."
+      sudo rm -f /run/gunicorn/socket
+      
       # Make sure the socket directory exists with proper permissions
+      echo "Creating socket directory with proper permissions..."
       sudo mkdir -p /run/gunicorn
       sudo chown www-data:www-data /run/gunicorn
       sudo chmod 755 /run/gunicorn
       
-      # Enable and start services with better error handling
+      # Reload systemd to recognize new service files
+      echo "Reloading systemd daemon..."
+      sudo systemctl daemon-reload
+      
+      # Enable services
       echo "Enabling gunicorn.socket..."
       sudo systemctl enable gunicorn.socket
       
       echo "Enabling gunicorn.service..."
-      sudo systemctl enable gunicorn
+      sudo systemctl enable gunicorn.service
       
+      # Start socket first
       echo "Starting gunicorn.socket..."
       sudo systemctl start gunicorn.socket
-      sudo systemctl status gunicorn.socket
+      echo "Socket status:"
+      sudo systemctl status gunicorn.socket --no-pager
+      
+      # Check socket file exists
+      echo "Checking if socket file exists:"
+      ls -la /run/gunicorn/
       
       # Test socket activation
       echo "Testing socket activation..."
-      curl --unix-socket /run/gunicorn/socket -v http://localhost
+      curl --unix-socket /run/gunicorn/socket -v http://localhost || echo "Socket not ready yet, continuing..."
       
+      # Start service
       echo "Starting gunicorn.service..."
-      sudo systemctl start gunicorn || {
+      sudo systemctl start gunicorn.service || {
         echo "❌ Gunicorn service failed to start. Checking logs..."
         echo "Socket status:"
-        sudo systemctl status gunicorn.socket
+        sudo systemctl status gunicorn.socket --no-pager
         echo "Service status:"
-        sudo systemctl status gunicorn.service
-        echo "Journal logs:"
-        sudo journalctl -xeu gunicorn.service --no-pager | tail -n 50
+        sudo systemctl status gunicorn.service --no-pager
+        echo "Journal logs for socket:"
+        sudo journalctl -xeu gunicorn.socket --no-pager | tail -n 30
+        echo "Journal logs for service:"
+        sudo journalctl -xeu gunicorn.service --no-pager | tail -n 30
+        echo "Checking Python path and environment:"
+        sudo -u ubuntu bash -c "cd $PRODUCTION_PATH/django_backend && ./venv/bin/python -c 'import sys; print(sys.path)'"
         exit 1
       }
+      
+      # Verify service is running
+      echo "Verifying gunicorn service status:"
+      sudo systemctl status gunicorn.service --no-pager
       sudo systemctl enable nginx
       sudo systemctl restart nginx
       
