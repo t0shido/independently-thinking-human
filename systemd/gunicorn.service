@@ -15,7 +15,7 @@ ExecStart=/home/ubuntu/independently_thinking_human/app_backend/venv/bin/gunicor
           --access-logfile - \
           --error-logfile - \
           --workers 3 \
-          --bind unix:/run/gunicorn/socket \
+          --bind 127.0.0.1:8000 \
           --timeout 60 \
           --keep-alive 2 \
           --pythonpath /home/ubuntu/independently_thinking_human/app_backend \
