@@ -272,12 +272,37 @@ deploy:production:
       
       # Start services
       echo "🚀 Starting services..."
+      
+      # Make sure the socket directory exists with proper permissions
+      sudo mkdir -p /run/gunicorn
+      sudo chown www-data:www-data /run/gunicorn
+      sudo chmod 755 /run/gunicorn
+      
+      # Enable and start services with better error handling
+      echo "Enabling gunicorn.socket..."
       sudo systemctl enable gunicorn.socket
+      
+      echo "Enabling gunicorn.service..."
       sudo systemctl enable gunicorn
+      
+      echo "Starting gunicorn.socket..."
       sudo systemctl start gunicorn.socket
+      sudo systemctl status gunicorn.socket
+      
+      # Test socket activation
+      echo "Testing socket activation..."
+      curl --unix-socket /run/gunicorn/socket -v http://localhost
+      
+      echo "Starting gunicorn.service..."
       sudo systemctl start gunicorn || {
         echo "❌ Gunicorn service failed to start. Checking logs..."
+        echo "Socket status:"
+        sudo systemctl status gunicorn.socket
+        echo "Service status:"
+        sudo systemctl status gunicorn.service
+        echo "Journal logs:"
         sudo journalctl -xeu gunicorn.service --no-pager | tail -n 50
+        exit 1
       }
       sudo systemctl enable nginx
       sudo systemctl restart nginx
