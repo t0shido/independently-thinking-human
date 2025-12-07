@@ -1,7 +1,6 @@
 from django.db import models
 import os
 from django.utils.text import slugify
-# Note: Using CharField instead of ImageField to avoid Pillow dependency
 
 class Section(models.Model):
     """
@@ -36,8 +35,7 @@ class Article(models.Model):
     excerpt = models.TextField(blank=True)
     content = models.TextField()
     section = models.ForeignKey(Section, related_name='articles', on_delete=models.CASCADE)
-    # Using CharField instead of ImageField to avoid Pillow dependency
-    image = models.CharField(max_length=255, null=True, blank=True)
+    image = models.ImageField(upload_to=article_image_path, null=True, blank=True)
     
     class Meta:
         ordering = ['-date']
