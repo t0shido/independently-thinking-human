@@ -37,7 +37,7 @@ CREATE TABLE public.articles_article (
 );
 
 
-ALTER TABLE public.articles_article OWNER TO postgres;
+ALTER TABLE public.articles_article OWNER TO toshi;
 
 --
 -- Name: articles_article_id_seq; Type: SEQUENCE; Schema: public; Owner: toshi
@@ -64,7 +64,7 @@ CREATE TABLE public.articles_section (
 );
 
 
-ALTER TABLE public.articles_section OWNER TO postgres;
+ALTER TABLE public.articles_section OWNER TO toshi;
 
 --
 -- Name: articles_section_id_seq; Type: SEQUENCE; Schema: public; Owner: toshi
@@ -90,7 +90,7 @@ CREATE TABLE public.articles_tag (
 );
 
 
-ALTER TABLE public.articles_tag OWNER TO postgres;
+ALTER TABLE public.articles_tag OWNER TO toshi;
 
 --
 -- Name: articles_tag_articles; Type: TABLE; Schema: public; Owner: toshi
@@ -103,7 +103,7 @@ CREATE TABLE public.articles_tag_articles (
 );
 
 
-ALTER TABLE public.articles_tag_articles OWNER TO postgres;
+ALTER TABLE public.articles_tag_articles OWNER TO toshi;
 
 --
 -- Name: articles_tag_articles_id_seq; Type: SEQUENCE; Schema: public; Owner: toshi
@@ -147,6 +147,7 @@ COPY public.articles_article (id, title, slug, author, date, excerpt, content, i
 2	The Cornerstone of Politics	the-cornerstone-of-politics	Toshi	2025-02-22	An exploration of how the dynamic tension between liberal and conservative mindsets creates the essential balance that keeps society moving forward sustainably.	# The Cornerstone of Politics\n\nImagine you're walking across a frozen lake. The ice beneath your feet is cracking, slowly breaking apart. Behind you, the ice is melting, vanishing into the past.\n\nIn front of you, the lake stretches on—but the ice looks thin. Unstable.\n\nYou have no choice but to keep moving forward, carefully shifting your weight, hoping the next step will hold. Move too fast, and you might misstep. Freeze in place, and you'll sink with the ice beneath you.\n\nThis is what life feels like. This is what society feels like. We are constantly caught between what we know and what comes next—between order and chaos, tradition and progress, stability and change. And the only way to move forward without falling through is to find balance.\n\nPeople approach this balancing act differently. Some move carefully, testing each step before they commit. Others take bold strides, willing to risk a fall for the chance to leap ahead. Some of us value discipline, structure, and careful planning. We make sure what we build is strong, that traditions are preserved, and that progress is measured, not reckless. Others are drawn to new ideas, innovation, and change. We see possibilities where others see risk. We push boundaries, challenge old ways, and imagine futures that don't yet exist. These instincts don't just shape individuals—they shape entire societies.\n\nThe same fundamental difference exists in politics. Those who move carefully, valuing structure and stability, tend to be more conservative. They keep one foot firmly planted on solid ground, ensuring we don't move too fast or break away from structures that have held us together. Those who reach forward, eager to explore and experiment, tend to be more liberal. They are the ones who search for new ground, pushing into the unknown, willing to take risks in the hope of finding a better path. And just like walking across a frozen lake, we need both feet.\n\nIf we only planted our feet firmly in what we know—never reaching for something new—we'd be stuck, frozen in place, eventually sinking with the ice beneath us. If we only reached forward—never grounding ourselves in what is stable—we'd take reckless steps, risking collapse with every move. Both mindsets exist for a reason, and the tension between them is what keeps a society from either collapsing in chaos or rotting in stagnation.\n\nBut there is no universal answer. The best way forward depends on the political landscape beneath us. If society is unstable, divided, or chaotic, conservative policies that reinforce structure and order might be necessary to prevent collapse. If society is stagnating, oppressive, or outdated, liberal policies that push for change and innovation may be essential to move forward. Sometimes, the ice is strong, and we can afford to step boldly. Other times, it's fragile, and caution is the wiser path.\n\nThe greatest danger is not that one side is wrong—it's that both sides stop listening. If the foot that holds steady refuses to acknowledge the need for movement, progress stalls. If the foot that reaches forward ignores the risk of collapse, we fall. This is why mutual communication and respect between these perspectives is not just important—it's essential. A nation that silences one side limps. A nation that demonizes the other falls.\n\nTrue progress happens when both sides recognize their role. When the conservative foot respects the need for movement, even if it prefers caution. When the liberal foot values the foundation it pushes against, even as it seeks new ground. And when both work together, adjusting in real time, moving as one.\n\nBecause progress is neither standing still nor running blindly forward. It is the delicate art of moving wisely across uncertain ground.\n\nLook around. What does the ice beneath us look like? Is it stable? Or is it cracking? Are we standing firm? Or are we falling through? If we want to move forward without breaking apart, we have to listen to each other. We have to respect the foot that holds steady—and the one that reaches forward.\n\nBecause in the end, no one walks this path alone.\n\nAnd whether we stand, stumble, or move forward—\n\nDepends on how we walk together.	politics/cornerstone.png	3
 4	The Mirror of the Mind	the-mirror-of-the-mind	Toshi	2025-02-11	How our perception shapes our reality and why mindset matters more than circumstances.	# The Mirror of the Mind\n\nEver wonder why two people can experience the same situation completely differently?\n\nOne person hits a traffic jam and spirals into frustration, convinced the world is conspiring against them. Another takes a deep breath, turns up their favorite song, and enjoys the pause. Same traffic. Same delay. But two entirely different experiences.\n\nWhy?\n\nBecause mindset is the lens through which we experience life. It's not just about what happens to us—it's about how we interpret it. The world doesn't come to us as a fixed reality; it bends and shifts based on the beliefs we hold, the thoughts we nurture, and the ideas we allow ourselves to explore. Every experience passes through this internal filter before it ever reaches us, shaping whether we see obstacles or opportunities, failures or lessons, burdens or blessings.\n\nWe don't see the world as it is—we see it as we are. Our beliefs color our reality, defining what we think is possible, what we expect from others, and even how we perceive ourselves. That's why one person sees rejection as proof of their inadequacy, while another sees it as redirection. It's why one person views struggle as unfair, while another views it as part of the process. The mind isn't just receiving reality—it's creating it.\n\nAnd that's why the most important decision you'll ever make is how you choose to see the world. Albert Einstein is often credited with asking: _Do you believe you live in a friendly or a hostile universe?_ It's not about what the universe actually is. It's about what you choose to believe. If you see life as hostile, you'll always be bracing for the next hit, taking every setback as proof that the odds are stacked against you. But if you see life as friendly, even the challenges will take on meaning. Struggles won't feel like punishment—they'll feel like growth. Failures won't be the end—they'll be steps forward. The circumstances won't change, but the way you experience them will.\n\nReality is unpredictable, often messy, and sometimes difficult. But your mindset determines whether you meet it with resistance or resilience, fear or curiosity, frustration or possibility. The lens you choose shapes the world you see.	mindset/mirror.png	4
 10	Spiraling Towards Truth	spiraling-towards-truth	Toshi	2025-08-18	In a world where people cling to their beliefs like anchors, science offers a way to navigate uncertainty with curiosity and humility. The scientific method is a simple, powerful tool that guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth.	# Spiraling Towards Truth\n\nIn a world where people cling to their beliefs like anchors, science offers a way to navigate uncertainty with curiosity and humility. The scientific method is a simple, powerful tool that guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth. But we mustn't confuse this method with what often passes for "science" today. In our polarized age, where ideologies and even scientific claims can feel dogmatic, returning to the reflective core of the scientific method, grounded in logic, could bring us all into the same boat, rowing toward a clearer understanding.\n\nThe scientific method is like a trusty guide for exploring the world. You notice something—like your plants thriving in sunlight but wilting in shade. You ask, Why does sunlight help plants grow? Then, you make a guess, a hypothesis: maybe sunlight fuels their food-making process. To test it, you run an experiment: grow some plants in the sun, others in the dark, and measure their growth. Next, you check the results—did the sunny plants grow taller? Finally, you decide if your guess holds up or needs rethinking. This process shines because it's built on evidence—facts you can measure, not just hunches. It's repeatable, so anyone can try the experiment and get similar results. And it's falsifiable, meaning your idea must be testable and open to being proven wrong. That's not a flaw—it's the heart of progress. The magic lies in reflection: pausing to ask, What do these results mean? Did I miss something? Reflection turns raw data into insight, pushing us to question assumptions and embrace new possibilities. It's the step that keeps us honest and curious.\n\nAt the heart of this method lies logic, the foundation that holds science together. Logic is the art of clear, consistent thinking—using rules to connect ideas and ensure conclusions follow from evidence. It's what lets us spot patterns in observations, craft testable hypotheses, design fair experiments, and draw reliable conclusions. Without logic, our ideas would be scattered guesses, not systematic inquiries. Logic ensures we don't jump to conclusions or mistake correlation for causation—like assuming rain alone makes plants grow without considering sunlight. It helps us avoid circular reasoning, where we assume what we're trying to prove. And it guards against confirmation bias, our tendency to notice only evidence that supports our existing beliefs. Logic isn't cold or mechanical; it's a tool that helps us see the world more clearly, separating what we know from what we merely believe or wish were true.	mindset/spiraling_towards_truth.png	4
+11	The Moment You Stop Running	the-moment-you-stop-running	Toshi	2025-12-08	Every human searches for happiness, yet most of us are taught to look for it in the wrong place. The real foundation of happiness is much simpler - it's gratitude.	# The Moment You Stop Running\n\nEvery human searches for happiness, yet most of us are taught to look for it in the wrong place. From childhood, we learn to believe that happiness will finally arrive _after_ the next achievement - after we get the degree, land the job, upgrade the car, or move to a better apartment. So we run from goal to goal, always reaching for something just out of sight. Maybe you know that feeling: you check one achievement off your list, and instead of feeling fulfilled, your mind instantly replaces it with another target. "What's next?" becomes the soundtrack of your life.\n\nThere's nothing wrong with ambition. But when you chase your goals from a place of emptiness - hoping success will fill the gap - you create a quiet, persistent sense of lack. Suddenly your happiness depends on the next promotion, the next purchase, the next relationship. Your mind keeps whispering, "I'll be happy when..." And with that mindset, happiness always stays in the future - never here, never now.\n\n## The Foundation of Happiness\n\nOne of the real foundations of happiness is much simpler - it's gratitude. Not the polite "thanks" you offer out of habit, but the kind of gratitude that sinks into your chest and reminds you that your life is happening _right now_.\n\nGratitude doesn't shrink your dreams; it just stops you from abandoning the present while you chase the future. It brings happiness out of the "someday" and plants it into "today." And when you feel full instead of lacking, working toward your goals becomes much easier.\n\n## Gratitude as Practice\n\nAnd like going to the gym, it's a practice. You have to train it - especially on the days when nothing goes as planned: your inbox explodes, your patience runs thin, your bills pile up, or you're running on four hours of sleep. Gratitude on those days is hard, but that's exactly when the real growth happens. It's the repetition, the consistency, the choice to practice even when life feels messy that makes gratitude start paying off.\n\n## The Science Behind Gratitude\n\nWhat makes gratitude so powerful is that it doesn't just shift your outlook - it literally shifts your biology. Scientists can measure what happens in the body when you practice it regularly. Gratitude increases dopamine and serotonin, your mind's natural "feel-good" chemicals. It lowers cortisol, the stress hormone that keeps you stuck in fight-or-flight mode. Brain scans even show that consistent gratitude strengthens the neural pathways responsible for emotional balance and resilience. In other words: the benefits aren't just philosophical - they're physical. That's why people who practice gratitude sleep better, feel calmer, and recover faster from stress.\n\n## A Shift in Perspective\n\nThese physical changes don't stay hidden in the background - they begin to shape how you experience your everyday life. When you practice gratitude long enough, something subtle but profound shifts. Happiness stops being a finish line. It becomes a lens. You still dream big, but now you're rooted instead of restless. You want more, but you're no longer starving for it. You move through life with a softer heart, clearer perspective, and a deeper appreciation for the ordinary moments.\n\n## Start Here\n\nIf happiness feels far away, the answer isn't to chase harder. It's to pause. Breathe. Notice one small thing you're grateful for - your warm cup of coffee, the morning sunlight on your floor, a message from a friend, or simply your own breath. Not because your life is perfect, but because there is always something here worth appreciating.\n\nHappiness doesn't live in the future. It grows in the moments when you slow down long enough to see what's already in front of you - and that simple shift can quietly change everything.	mindset/gratitude.png	4
 \.
 
 
@@ -203,6 +204,9 @@ COPY public.articles_tag (id, name) FROM stdin;
 32	science
 33	reflection
 34	logic
+35	gratitude
+36	happiness
+37	self-improvement
 \.
 
 
@@ -250,6 +254,10 @@ COPY public.articles_tag_articles (id, tag_id, article_id) FROM stdin;
 37	32	10
 38	33	10
 39	34	10
+40	35	11
+41	36	11
+42	11	11
+43	37	11
 \.
 
 
@@ -257,7 +265,7 @@ COPY public.articles_tag_articles (id, tag_id, article_id) FROM stdin;
 -- Name: articles_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_article_id_seq', 10, true);
+SELECT pg_catalog.setval('public.articles_article_id_seq', 11, true);
 
 
 --
@@ -271,14 +279,14 @@ SELECT pg_catalog.setval('public.articles_section_id_seq', 8, true);
 -- Name: articles_tag_articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_tag_articles_id_seq', 39, true);
+SELECT pg_catalog.setval('public.articles_tag_articles_id_seq', 43, true);
 
 
 --
 -- Name: articles_tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_tag_id_seq', 34, true);
+SELECT pg_catalog.setval('public.articles_tag_id_seq', 37, true);
 
 
 --
