@@ -28,6 +28,14 @@ class Article(models.Model):
     """
     Represents a blog article with all its content and metadata
     """
+    IMAGE_POSITION_CHOICES = [
+        ('after_paragraph_1', 'After 1st paragraph'),
+        ('after_paragraph_2', 'After 2nd paragraph'),
+        ('after_paragraph_3', 'After 3rd paragraph'),
+        ('top', 'At the top'),
+        ('bottom', 'At the bottom'),
+    ]
+    
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     author = models.CharField(max_length=100)
@@ -36,6 +44,12 @@ class Article(models.Model):
     content = models.TextField()
     section = models.ForeignKey(Section, related_name='articles', on_delete=models.CASCADE)
     image = models.ImageField(upload_to=article_image_path, null=True, blank=True)
+    image_position = models.CharField(
+        max_length=20,
+        choices=IMAGE_POSITION_CHOICES,
+        default='after_paragraph_2',
+        help_text='Where to display the image in the article'
+    )
     
     class Meta:
         ordering = ['-date']

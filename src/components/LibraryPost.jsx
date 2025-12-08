@@ -46,36 +46,55 @@ export const LibraryPost = ({ post, isPreview = false, section, cardStyle = 'hor
   const contentLines = post.content.split('\n');
   const contentWithoutTitle = contentLines.slice(2).join('\n');
   const paragraphs = contentWithoutTitle.split('\n\n');
-  const beforeImage = paragraphs.slice(0, 2).join('\n\n');
-  const afterImage = paragraphs.slice(2).join('\n\n');
+  
+  // Determine image position based on post.image_position
+  const imagePosition = post.image_position || 'after_paragraph_2';
+  let splitIndex = 2; // default: after 2nd paragraph
+  
+  if (imagePosition === 'after_paragraph_1') splitIndex = 1;
+  else if (imagePosition === 'after_paragraph_2') splitIndex = 2;
+  else if (imagePosition === 'after_paragraph_3') splitIndex = 3;
+  else if (imagePosition === 'top') splitIndex = 0;
+  else if (imagePosition === 'bottom') splitIndex = paragraphs.length;
+  
+  const beforeImage = paragraphs.slice(0, splitIndex).join('\n\n');
+  const afterImage = paragraphs.slice(splitIndex).join('\n\n');
+
+  const renderImage = () => (
+    <div className="library-post-image">
+      {imageUrl && (
+        <img 
+          src={imageUrl}
+          alt={post.title}
+          style={{
+            width: '100%',
+            maxHeight: '400px',
+            objectFit: 'cover',
+            objectPosition: 'center'
+          }}
+          onError={(e) => {
+            console.error(`Failed to load image: ${imageUrl}`);
+            e.target.style.display = 'none';
+          }}
+        />
+      )}
+    </div>
+  );
 
   return (
     <article className={`library-post ${isMobile ? 'mobile-view' : ''}`}>
       <div className="library-post-content">
         <h1>{post.title}</h1>
         
+        {imagePosition === 'top' && renderImage()}
+        
         <ReactMarkdown>{beforeImage}</ReactMarkdown>
         
-        <div className="library-post-image">
-          {imageUrl && (
-            <img 
-              src={imageUrl}
-              alt={post.title}
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-              onError={(e) => {
-                console.error(`Failed to load image: ${imageUrl}`);
-                e.target.style.display = 'none';
-              }}
-            />
-          )}
-        </div>
+        {imagePosition !== 'top' && imagePosition !== 'bottom' && renderImage()}
 
         <ReactMarkdown>{afterImage}</ReactMarkdown>
+        
+        {imagePosition === 'bottom' && renderImage()}
 
         <div className="metadata">
           <p className="author">By {post.author}</p>

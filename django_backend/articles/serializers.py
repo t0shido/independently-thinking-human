@@ -23,7 +23,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Article
-        fields = ['title', 'slug', 'author', 'date', 'excerpt', 'content', 'section', 'tags', 'image']
+        fields = ['title', 'slug', 'author', 'date', 'excerpt', 'content', 'section', 'tags', 'image', 'image_position']
     
     def get_tags(self, obj):
         """Return tags as a list of strings to match Express.js API format"""
