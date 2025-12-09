@@ -6,7 +6,6 @@ const SECTIONS = {
   politics: [],
   economics: [],
   technology: [],
-  health: [],
   stories: []
 };
 

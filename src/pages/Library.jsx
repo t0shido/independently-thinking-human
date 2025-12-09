@@ -244,7 +244,6 @@ const Library = () => {
             <Link to="/library/politics" className={section === 'politics' ? 'active' : ''}>Politics</Link>
             <Link to="/library/economics" className={section === 'economics' ? 'active' : ''}>Economics</Link>
             <Link to="/library/technology" className={section === 'technology' ? 'active' : ''}>Technology</Link>
-            <Link to="/library/health" className={section === 'health' ? 'active' : ''}>Health</Link>
             <Link to="/library/stories" className={section === 'stories' ? 'active' : ''}>Stories</Link>
           </div>
         )}

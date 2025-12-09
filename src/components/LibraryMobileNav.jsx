@@ -13,7 +13,6 @@ const LibraryMobileNav = () => {
     { path: 'politics', label: 'Politics' },
     { path: 'economics', label: 'Economics' },
     { path: 'technology', label: 'Technology' },
-    { path: 'health', label: 'Health' },
     { path: 'stories', label: 'Stories' }
   ];
 
