@@ -38,91 +38,6 @@ INSERT INTO public.articles_section VALUES (6, 'Economics', 'economics');
 -- Data for Name: articles_article; Type: TABLE DATA; Schema: public; Owner: toshi
 --
 
-INSERT INTO public.articles_article VALUES (3, 'The Wave and the Ocean', 'the-wave-and-the-ocean', 'Toshi', '2025-05-30', 'Exploring the nature of consciousness and our deep connection to the universe as expressions of a greater whole.', '# The Wave and the Ocean
-
-Look at a wave in the ocean. It rises, rolls forward, then disappears into the sea. On its own, it seems like a fleeting, separate thing. But step back, and you see it for what it truly is: not a thing apart, but a momentary expression of something vast, deep, and whole.
-
-You are like that wave.
-
-You rise, you think, you feel. You carry memories, desires, fears. You feel like an individual — a self. But maybe you''re not as separate as you believe. Maybe none of us are. Maybe the idea of being "separate" is just something we made up to help us make sense of the world.
-
-Because when you strip away the borders, the categories, the names — what''s really left? One thing. One process. One living, breathing, unfolding whole.
-
-Trees don''t breathe without the sun.
-
-You don''t breathe without the trees.
-
-Your thoughts don''t form without air, food, history, and language — all born from the world you live in.
-
-You are not on Earth. You are of Earth.
-
-You are not in the universe. You are an instance of the universe — made of its dust, powered by its laws, and shaped by its story.
-
-And so, the universe is not just "out there." It''s here. In your lungs. Behind your eyes. Inside your thoughts.
-
-You know that you are.
-
-Right now, in this moment, you are aware.
-
-You feel. You reflect. You wonder.
-
-That''s consciousness. That simple, mysterious knowing: "I exist."
-
-We talk about it like it''s normal, but it''s not.
-
-It''s astonishing. Out of all the matter in the universe — stars, rocks, oceans — you are a piece of it that somehow knows it exists.
-
-That raises a question most people never dare ask:
-
-If I''m part of the universe, and I''m conscious…
-
-Then isn''t the universe, in some small way… already conscious?
-
-You aren''t the only conscious being.
-
-Millions of others are walking the earth, swimming through oceans, flying through sky — all of them aware in some form.
-
-Billions more may be out there, waiting in distant galaxies.
-
-If one part of the universe is conscious, why not many?
-
-And if many parts can be aware, then why not the whole universe itself?
-
-For thousands of years, humans have searched for God —
-
-Some being above or beyond, watching, judging, loving, creating.
-
-But maybe we''ve been looking in the wrong direction.
-
-What if God isn''t elsewhere, but everywhere?
-
-What if God isn''t separate from creation, but is creation itself — not as a person, but as a presence — an awareness woven into the fabric of reality?
-
-What if you are not just a creature created by God,
-
-but God, seeing itself from a single point of view?
-
-And if we know that we are conscious, truly know it —
-
-Then how could we believe we''re the only ones?
-
-How could something so real, so undeniable, arise just once in a single form and nowhere else?
-
-Maybe consciousness is not rare.
-
-Maybe it''s a pattern. A rhythm. A universal potential playing out again and again.
-
-Your awareness is not an isolated flame.
-
-It''s one spark in a vast constellation of lights — some flickering quietly, some burning bright, all part of the same living sky.
-
-And that changes everything.
-
-Because it means you are not just passing through a lifeless cosmos.
-
-You are the cosmos — thinking, feeling, dreaming.
-
-You are the universe, waking up to itself.', 'mindset/wave.png', 4);
 INSERT INTO public.articles_article VALUES (6, 'Through the Eyes of Story', 'through-the-eyes-of-story', 'Toshi', '2025-06-16', 'Stories act as bridges connecting us to ancient wisdom, helping us navigate both facts and meaning in our complex world.', '
 
 
@@ -311,6 +226,145 @@ We don''t see the world as it is—we see it as we are. Our beliefs color our re
 And that''s why the most important decision you''ll ever make is how you choose to see the world. Albert Einstein is often credited with asking: _Do you believe you live in a friendly or a hostile universe?_ It''s not about what the universe actually is. It''s about what you choose to believe. If you see life as hostile, you''ll always be bracing for the next hit, taking every setback as proof that the odds are stacked against you. But if you see life as friendly, even the challenges will take on meaning. Struggles won''t feel like punishment—they''ll feel like growth. Failures won''t be the end—they''ll be steps forward. The circumstances won''t change, but the way you experience them will.
 
 Reality is unpredictable, often messy, and sometimes difficult. But your mindset determines whether you meet it with resistance or resilience, fear or curiosity, frustration or possibility. The lens you choose shapes the world you see.', 'mindset/mirror.png', 4);
+INSERT INTO public.articles_article VALUES (3, 'The Wave and the Ocean', 'the-wave-and-the-ocean', 'Toshi', '2025-05-30', 'Exploring the nature of consciousness and our deep connection to the universe as expressions of a greater whole.', '# The Wave and the Ocean
+
+Look at a wave in the ocean. It rises, rolls forward, then disappears into the sea. On its own, it seems like a fleeting, separate thing. But step back, and you see it for what it truly is: not a thing apart, but a momentary expression of something vast, deep, and whole.
+
+You are like that wave.
+
+You feel solid, continuous, separate.
+But you''re not a fixed thing — you''re a process.
+A flow.
+
+Every cell in your body is replaced.
+Your bones, your skin, your blood — all swapped out over time.
+Ten years from now, the body you''re standing in today won''t even exist.
+And yet you still say "me,"
+even though the "you" you''re referring to is always changing.
+
+So where exactly is the boundary?
+Where does the "self" end and the "world" begin?
+
+You breathe in what a tree exhales.
+The tree breathes in what you exhale.
+Your body is made from food grown in soil
+that used to be stars,
+that used to be oceans,
+that used to be other living things.
+
+Nothing about you is separate.
+Nothing about you is static.
+You are continuous with everything around you.
+
+Trees don''t breathe without the sun.
+You don''t breathe without the trees.
+
+Your thoughts don''t form without air, food, history, and language — all born from the world you live in.
+
+You are not on Earth. You are of Earth.
+
+You are not in the universe. You are an instance of the universe — made of its dust, powered by its laws, and shaped by its story.
+
+And so, the universe is not just "out there." It''s here. In your lungs. Behind your eyes. Inside your thoughts.
+
+And you know that you are.
+
+Right now, in this moment, you are aware.
+
+You feel. You reflect. You wonder.
+
+That''s consciousness. That simple, mysterious knowing: "I exist."
+
+We talk about it like it''s normal, but it''s not.
+
+It''s astonishing. Out of all the matter in the universe — stars, rocks, oceans — you are a piece of it that somehow knows it exists.
+
+That raises a question most people never dare ask:
+
+If I''m part of the universe, and I''m conscious…
+
+Then isn''t the universe, in some small way… already conscious?
+
+Because if _you_ are conscious — and you are not separate from the universe —
+
+then what does that really mean?
+
+If a wave belongs to the ocean,
+
+and the wave is moving,
+
+would you ever say the ocean is motionless?
+
+If a branch belongs to the tree,
+
+and the branch is alive,
+
+would you ever say the tree is lifeless?
+
+So if _you_ are conscious,
+
+and you are a part of the whole,
+
+then how could the whole be unconscious?
+
+Why would a single fragment of reality
+
+have something the entire reality does not?
+
+Why would the _part_ have awareness,
+
+yet the _source_ of that part — the universe —
+
+be empty of it?
+
+It makes no sense.
+
+A fractal never contains a pattern
+that isn''t already present in the whole form.
+The small reflects the large.
+The detail reflects the structure.
+The spark reflects the fire.
+
+So if consciousness appears in you,
+and you arise from the universe,
+then consciousness must be a potential of the universe itself —
+not an accident, not an exception,
+but an expression of what the whole is capable of.
+
+The part cannot possess
+what the whole entirely lacks.
+
+For thousands of years, people have searched for God —
+
+some powerful being above us or beyond us,
+
+watching, judging, loving, creating.
+
+But maybe we''ve been looking in the wrong direction.
+
+What if God isn''t elsewhere, but everywhere?
+
+What if God isn''t separate from creation, but is creation itself — not as a person, but as a presence — an awareness woven into the fabric of reality?
+
+What if you are not just a creature created by God,
+
+but God, seeing itself from a single point of view?
+
+And if we know that we are conscious, truly know it —
+
+Then how could we believe we''re the only ones?
+
+How could something so real, so undeniable, arise just once in a single form and nowhere else?
+
+Maybe consciousness is not rare.
+
+Maybe it''s a pattern. A rhythm. A universal potential playing out again and again.
+
+Your awareness is not an isolated flame.
+
+You are the cosmos — thinking, feeling, dreaming.
+
+You are the universe, waking up to itself.', 'mindset/wave.png', 4);
 INSERT INTO public.articles_article VALUES (11, 'The Moment You Stop Running', 'the-moment-you-stop-running', 'Toshi', '2025-12-08', 'Every human searches for happiness, yet most of us are taught to look for it in the wrong place. The real foundation of happiness is much simpler - it''s gratitude.', '# The Moment You Stop Running
 
 Every human searches for happiness, yet most of us are taught to look for it in the wrong place. From childhood, we learn to believe that happiness will finally arrive _after_ the next achievement - after we get the degree, land the job, upgrade the car, or move to a better apartment. So we run from goal to goal, always reaching for something just out of sight. Maybe you know that feeling: you check one achievement off your list, and instead of feeling fulfilled, your mind instantly replaces it with another target. "What''s next?" becomes the soundtrack of your life.
