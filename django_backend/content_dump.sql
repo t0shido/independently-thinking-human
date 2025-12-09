@@ -1,4 +1,4 @@
--- Clean existing data first (in correct order due to foreign keys)
+-- Clean existing data first
 TRUNCATE public.articles_tag_articles CASCADE;
 TRUNCATE public.articles_tag CASCADE;
 TRUNCATE public.articles_article CASCADE;
