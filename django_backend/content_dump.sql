@@ -311,35 +311,6 @@ We don''t see the world as it is—we see it as we are. Our beliefs color our re
 And that''s why the most important decision you''ll ever make is how you choose to see the world. Albert Einstein is often credited with asking: _Do you believe you live in a friendly or a hostile universe?_ It''s not about what the universe actually is. It''s about what you choose to believe. If you see life as hostile, you''ll always be bracing for the next hit, taking every setback as proof that the odds are stacked against you. But if you see life as friendly, even the challenges will take on meaning. Struggles won''t feel like punishment—they''ll feel like growth. Failures won''t be the end—they''ll be steps forward. The circumstances won''t change, but the way you experience them will.
 
 Reality is unpredictable, often messy, and sometimes difficult. But your mindset determines whether you meet it with resistance or resilience, fear or curiosity, frustration or possibility. The lens you choose shapes the world you see.', 'mindset/mirror.png', 4);
-INSERT INTO public.articles_article VALUES (11, 'The Moment You Stop Running', 'the-moment-you-stop-running', 'Toshi', '2025-12-08', 'Every human searches for happiness, yet most of us are taught to look for it in the wrong place. The real foundation of happiness is much simpler - it''s gratitude.', '# The Moment You Stop Running
-
-Every human searches for happiness, yet most of us are taught to look for it in the wrong place. From childhood, we learn to believe that happiness will finally arrive _after_ the next achievement - after we get the degree, land the job, upgrade the car, or move to a better apartment. So we run from goal to goal, always reaching for something just out of sight. Maybe you know that feeling: you check one achievement off your list, and instead of feeling fulfilled, your mind instantly replaces it with another target. "What''s next?" becomes the soundtrack of your life.
-
-There''s nothing wrong with ambition. But when you chase your goals from a place of emptiness - hoping success will fill the gap - you create a quiet, persistent sense of lack. Suddenly your happiness depends on the next promotion, the next purchase, the next relationship. Your mind keeps whispering, "I''ll be happy when..." And with that mindset, happiness always stays in the future - never here, never now.
-
-## The Foundation of Happiness
-
-One of the real foundations of happiness is much simpler - it''s gratitude. Not the polite "thanks" you offer out of habit, but the kind of gratitude that sinks into your chest and reminds you that your life is happening _right now_.
-
-Gratitude doesn''t shrink your dreams; it just stops you from abandoning the present while you chase the future. It brings happiness out of the "someday" and plants it into "today." And when you feel full instead of lacking, working toward your goals becomes much easier.
-
-## Gratitude as Practice
-
-And like going to the gym, it''s a practice. You have to train it - especially on the days when nothing goes as planned: your inbox explodes, your patience runs thin, your bills pile up, or you''re running on four hours of sleep. Gratitude on those days is hard, but that''s exactly when the real growth happens. It''s the repetition, the consistency, the choice to practice even when life feels messy that makes gratitude start paying off.
-
-## The Science Behind Gratitude
-
-What makes gratitude so powerful is that it doesn''t just shift your outlook - it literally shifts your biology. Scientists can measure what happens in the body when you practice it regularly. Gratitude increases dopamine and serotonin, your mind''s natural "feel-good" chemicals. It lowers cortisol, the stress hormone that keeps you stuck in fight-or-flight mode. Brain scans even show that consistent gratitude strengthens the neural pathways responsible for emotional balance and resilience. In other words: the benefits aren''t just philosophical - they''re physical. That''s why people who practice gratitude sleep better, feel calmer, and recover faster from stress.
-
-## A Shift in Perspective
-
-These physical changes don''t stay hidden in the background - they begin to shape how you experience your everyday life. When you practice gratitude long enough, something subtle but profound shifts. Happiness stops being a finish line. It becomes a lens. You still dream big, but now you''re rooted instead of restless. You want more, but you''re no longer starving for it. You move through life with a softer heart, clearer perspective, and a deeper appreciation for the ordinary moments.
-
-## Start Here
-
-If happiness feels far away, the answer isn''t to chase harder. It''s to pause. Breathe. Notice one small thing you''re grateful for - your warm cup of coffee, the morning sunlight on your floor, a message from a friend, or simply your own breath. Not because your life is perfect, but because there is always something here worth appreciating.
-
-Happiness doesn''t live in the future. It grows in the moments when you slow down long enough to see what''s already in front of you - and that simple shift can quietly change everything.', 'mindset/gratitude.png', 4);
 INSERT INTO public.articles_article VALUES (10, 'Spiraling Towards Truth', 'spiraling-towards-truth', 'Toshi', '2025-08-18', 'In a world where people cling to their beliefs like anchors, science offers a way to navigate uncertainty with curiosity and humility. The scientific method is a simple, powerful tool that guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth.', '# Spiraling Towards Truth
 
 In a world where people cling to their beliefs like anchors, science offers a way to navigate uncertainty with curiosity and humility. The scientific method is a simple, powerful tool that guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth. But we mustn''t confuse this method with what often passes for "science" today. In our polarized age, where ideologies and even scientific claims can feel dogmatic, returning to the reflective core of the scientific method, grounded in logic, could bring us all into the same boat, rowing toward a clearer understanding.
@@ -347,6 +318,30 @@ In a world where people cling to their beliefs like anchors, science offers a wa
 The scientific method is like a trusty guide for exploring the world. You notice something—like your plants thriving in sunlight but wilting in shade. You ask, Why does sunlight help plants grow? Then, you make a guess, a hypothesis: maybe sunlight fuels their food-making process. To test it, you run an experiment: grow some plants in the sun, others in the dark, and measure their growth. Next, you check the results—did the sunny plants grow taller? Finally, you decide if your guess holds up or needs rethinking. This process shines because it''s built on evidence—facts you can measure, not just hunches. It''s repeatable, so anyone can try the experiment and get similar results. And it''s falsifiable, meaning your idea must be testable and open to being proven wrong. That''s not a flaw—it''s the heart of progress. The magic lies in reflection: pausing to ask, What do these results mean? Did I miss something? Reflection turns raw data into insight, pushing us to question assumptions and embrace new possibilities. It''s the step that keeps us honest and curious.
 
 At the heart of this method lies logic, the foundation that holds science together. Logic is the art of clear, consistent thinking—using rules to connect ideas and ensure conclusions follow from evidence. It''s what lets us spot patterns in observations, craft testable hypotheses, design fair experiments, and draw reliable conclusions. Without logic, our ideas would be scattered guesses, not systematic inquiries. Logic ensures we don''t jump to conclusions or mistake correlation for causation—like assuming rain alone makes plants grow without considering sunlight. It helps us avoid circular reasoning, where we assume what we''re trying to prove. And it guards against confirmation bias, our tendency to notice only evidence that supports our existing beliefs. Logic isn''t cold or mechanical; it''s a tool that helps us see the world more clearly, separating what we know from what we merely believe or wish were true.', 'mindset/spiraling_towards_truth.png', 1);
+INSERT INTO public.articles_article VALUES (11, 'The Moment You Stop Running', 'the-moment-you-stop-running', 'Toshi', '2025-12-08', 'Every human searches for happiness, yet most of us are taught to look for it in the wrong place. The real foundation of happiness is much simpler - it''s gratitude.', '# The Moment You Stop Running
+
+Every human searches for happiness, yet most of us are taught to look for it in the wrong place. From childhood, we learn to believe that happiness will finally arrive _after_ the next achievement - after we get the degree, land the job, upgrade the car, or move to a better apartment. So we run from goal to goal, always reaching for something just out of sight. Maybe you know that feeling: you check one achievement off your list, and instead of feeling fulfilled, your mind instantly replaces it with another target. "What''s next?" becomes the soundtrack of your life.
+
+There''s nothing wrong with ambition. But when you chase your goals from a place of emptiness - hoping success will fill the gap - you create a quiet, persistent sense of lack. Suddenly your happiness depends on the next promotion, the next purchase, the next relationship. Your mind keeps whispering, "I''ll be happy when..." And with that mindset, happiness always stays in the future - never here, never now.
+
+
+One of the real foundations of happiness is much simpler - it''s gratitude. Not the polite "thanks" you offer out of habit, but the kind of gratitude that sinks into your chest and reminds you that your life is happening _right now_.
+
+Gratitude doesn''t shrink your dreams; it just stops you from abandoning the present while you chase the future. It brings happiness out of the "someday" and plants it into "today." And when you feel full instead of lacking, working toward your goals becomes much easier.
+
+
+And like going to the gym, it''s a practice. You have to train it - especially on the days when nothing goes as planned: your inbox explodes, your patience runs thin, your bills pile up, or you''re running on four hours of sleep. Gratitude on those days is hard, but that''s exactly when the real growth happens. It''s the repetition, the consistency, the choice to practice even when life feels messy that makes gratitude start paying off.
+
+
+What makes gratitude so powerful is that it doesn''t just shift your outlook - it literally shifts your biology. Scientists can measure what happens in the body when you practice it regularly. Gratitude increases dopamine and serotonin, your mind''s natural "feel-good" chemicals. It lowers cortisol, the stress hormone that keeps you stuck in fight-or-flight mode. Brain scans even show that consistent gratitude strengthens the neural pathways responsible for emotional balance and resilience. In other words: the benefits aren''t just philosophical - they''re physical. That''s why people who practice gratitude sleep better, feel calmer, and recover faster from stress.
+
+
+These physical changes don''t stay hidden in the background - they begin to shape how you experience your everyday life. When you practice gratitude long enough, something subtle but profound shifts. Happiness stops being a finish line. It becomes a lens. You still dream big, but now you''re rooted instead of restless. You want more, but you''re no longer starving for it. You move through life with a softer heart, clearer perspective, and a deeper appreciation for the ordinary moments.
+
+
+If happiness feels far away, the answer isn''t to chase harder. It''s to pause. Breathe. Notice one small thing you''re grateful for - your warm cup of coffee, the morning sunlight on your floor, a message from a friend, or simply your own breath. Not because your life is perfect, but because there is always something here worth appreciating.
+
+Happiness doesn''t live in the future. It grows in the moments when you slow down long enough to see what''s already in front of you - and that simple shift can quietly change everything.', 'mindset/gratitude.png', 4);
 
 
 --
