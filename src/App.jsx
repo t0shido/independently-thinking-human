@@ -3,6 +3,7 @@ import { isMobile } from 'react-device-detect';
 import './App.css';
 import Library from './pages/Library';
 import Admin from './pages/Admin';
+import Contact from './pages/Contact';
 import MobileNav from './components/MobileNav';
 import chaosOrderImage from '../content/home/chaos_and_order.png';
 import homeContent from '../content/home/intro.json';
@@ -117,17 +118,7 @@ function AppContent() {
               </div>
             </div>
           } />
-          <Route path="/contact" element={
-            <div className="default-page">
-              <div className="content-wrapper">
-                <h1>Contact</h1>
-                <p className="subtitle">Get in touch</p>
-                <div className="coming-soon">
-                  <p>Contact information and form coming soon.</p>
-                </div>
-              </div>
-            </div>
-          } />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
