@@ -12,7 +12,9 @@ const LibrarySection = ({ section }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const { slug } = useParams();
+  const POSTS_PER_PAGE = 10;
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -59,46 +61,77 @@ const LibrarySection = ({ section }) => {
     return <div>No posts found in this section.</div>;
   }
 
+  // Pagination logic
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const currentPosts = posts.slice(startIndex, endIndex);
+  const featuredPost = currentPage === 1 ? currentPosts[0] : null;
+  const secondaryPosts = currentPage === 1 ? currentPosts.slice(1) : currentPosts;
+
   return (
-    <div className="overview-grid">
-      <div className="featured-section">
-        {posts[0] && (
-          <Link to={`/library/${section}/${posts[0].slug}`} className="book-card large">
-            <div className="book-cover">
-              {posts[0].image && (
-                <img 
-                  src={getImageUrl(posts[0], section)}
-                  alt={posts[0].title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center'
-                  }}
-                />
-              )}
-            </div>
-            <div className="card-content">
-              <h2>Featured in {section.charAt(0).toUpperCase() + section.slice(1)}</h2>
-              <h3>{posts[0].title}</h3>
-              <p className="description">{posts[0].excerpt}</p>
-              <p className="author">By {posts[0].author}</p>
-              {!isMobile && <p className="category">{posts[0].tags?.join(', ')}</p>}
-            </div>
-          </Link>
+    <>
+      <div className="overview-grid">
+        {featuredPost && (
+          <div className="featured-section">
+            <Link to={`/library/${section}/${featuredPost.slug}`} className="book-card large">
+              <div className="book-cover">
+                {featuredPost.image && (
+                  <img 
+                    src={getImageUrl(featuredPost, section)}
+                    alt={featuredPost.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center'
+                    }}
+                  />
+                )}
+              </div>
+              <div className="card-content">
+                <h2>Featured in {section.charAt(0).toUpperCase() + section.slice(1)}</h2>
+                <h3>{featuredPost.title}</h3>
+                <p className="description">{featuredPost.excerpt}</p>
+                <p className="author">By {featuredPost.author}</p>
+                {!isMobile && <p className="category">{featuredPost.tags?.join(', ')}</p>}
+              </div>
+            </Link>
+          </div>
         )}
+        <div className="secondary-section">
+          {secondaryPosts.map(post => (
+            <LibraryPost 
+              key={post.slug} 
+              post={post} 
+              isPreview={true} 
+              section={section} 
+            />
+          ))}
+        </div>
       </div>
-      <div className="secondary-section">
-        {posts.slice(1).map(post => (
-          <LibraryPost 
-            key={post.slug} 
-            post={post} 
-            isPreview={true} 
-            section={section} 
-          />
-        ))}
-      </div>
-    </div>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            ← Previous
+          </button>
+          <span className="pagination-info">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Next →
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -106,6 +139,8 @@ const Overview = () => {
   const [featuredArticles, setFeaturedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const POSTS_PER_PAGE = 10;
   
   // Function to fetch articles from each section
   const fetchAllSectionArticles = async () => {
@@ -140,8 +175,8 @@ const Overview = () => {
       // Sort by date (newest first)
       const sortedArticles = allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
       
-      // Take the most recent articles for the overview
-      setFeaturedArticles(sortedArticles.slice(0, 10));
+      // Store all articles for pagination
+      setFeaturedArticles(sortedArticles);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching articles:', error);
@@ -173,54 +208,79 @@ const Overview = () => {
     return <div className="loading-message">No articles found.</div>;
   }
   
-  // Sort articles by date (newest first)
-  const sortedArticles = [...featuredArticles].sort((a, b) => {
-    return new Date(b.date) - new Date(a.date);
-  });
-  
-  // Extract featured article and the rest
-  const [featuredArticle, ...otherArticles] = sortedArticles;
+  // Pagination logic
+  const totalPages = Math.ceil(featuredArticles.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const currentPosts = featuredArticles.slice(startIndex, endIndex);
+  const featuredArticle = currentPage === 1 ? currentPosts[0] : null;
+  const otherArticles = currentPage === 1 ? currentPosts.slice(1) : currentPosts;
 
   return (
-    <div className="overview-grid">
-      <div className="featured-section">
-        <Link to={`/library/${featuredArticle.section}/${featuredArticle.slug}`} className="book-card large">
-          <div className="book-cover">
-            {featuredArticle.image && (
-              <img 
-                src={getImageUrl(featuredArticle)}
-                alt={featuredArticle.title}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            )}
+    <>
+      <div className="overview-grid">
+        {featuredArticle && (
+          <div className="featured-section">
+            <Link to={`/library/${featuredArticle.section}/${featuredArticle.slug}`} className="book-card large">
+              <div className="book-cover">
+                {featuredArticle.image && (
+                  <img 
+                    src={getImageUrl(featuredArticle)}
+                    alt={featuredArticle.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center'
+                    }}
+                  />
+                )}
+              </div>
+              <div className="card-content">
+                <h2>Featured in {featuredArticle.section.charAt(0).toUpperCase() + featuredArticle.section.slice(1)}</h2>
+                <h3>{featuredArticle.title}</h3>
+                <p className="description">{featuredArticle.excerpt}</p>
+                <p className="author">By {featuredArticle.author}</p>
+                {!isMobile && <p className="category">{featuredArticle.tags?.join(', ')}</p>}
+              </div>
+            </Link>
           </div>
-          <div className="card-content">
-            <h2>Featured in {featuredArticle.section.charAt(0).toUpperCase() + featuredArticle.section.slice(1)}</h2>
-            <h3>{featuredArticle.title}</h3>
-            <p className="description">{featuredArticle.excerpt}</p>
-            <p className="author">By {featuredArticle.author}</p>
-            {!isMobile && <p className="category">{featuredArticle.tags?.join(', ')}</p>}
-          </div>
-        </Link>
+        )}
+        <div className="secondary-section">
+          {otherArticles.map(post => (
+            <LibraryPost 
+              key={post.slug} 
+              post={post} 
+              isPreview={true} 
+              section={post.section}
+              cardStyle="large"
+              showSectionHeading={true}
+            />
+          ))}
+        </div>
       </div>
-      <div className="secondary-section">
-        {otherArticles.map(post => (
-          <LibraryPost 
-            key={post.slug} 
-            post={post} 
-            isPreview={true} 
-            section={post.section}
-            cardStyle="large"
-            showSectionHeading={true}
-          />
-        ))}
-      </div>
-    </div>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            ← Previous
+          </button>
+          <span className="pagination-info">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Next →
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
