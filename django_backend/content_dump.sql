@@ -232,139 +232,63 @@ Look at a wave in the ocean. It rises, rolls forward, then disappears into the s
 
 You are like that wave.
 
-You feel solid, continuous, separate.
-But you''re not a fixed thing — you''re a process.
-A flow.
+You feel solid, continuous, separate. But you''re not a fixed thing — you''re a process. A flow.
 
-Every cell in your body is replaced.
-Your bones, your skin, your blood — all swapped out over time.
-Ten years from now, the body you''re standing in today won''t even exist.
-And yet you still say "me,"
-even though the "you" you''re referring to is always changing.
+Every cell in your body is replaced. Your bones, your skin, your blood — all swapped out over time. Ten years from now, the body you''re standing in today won''t even exist. And yet you still say "me," even though the "you" you''re referring to is always changing.
 
-So where exactly is the boundary?
-Where does the "self" end and the "world" begin?
+So where exactly is the boundary? Where does the "self" end and the "world" begin?
 
-You breathe in what a tree exhales.
-The tree breathes in what you exhale.
-Your body is made from food grown in soil
-that used to be stars,
-that used to be oceans,
-that used to be other living things.
+You breathe in what a tree exhales. The tree breathes in what you exhale. Your body is made from food grown in soil that used to be stars, that used to be oceans, that used to be other living things.
 
-Nothing about you is separate.
-Nothing about you is static.
-You are continuous with everything around you.
+Nothing about you is separate. Nothing about you is static. You are continuous with everything around you.
 
-Trees don''t breathe without the sun.
-You don''t breathe without the trees.
+Trees don''t breathe without the sun. You don''t breathe without the trees. Your thoughts don''t form without air, food, history, and language — all born from the world you live in.
 
-Your thoughts don''t form without air, food, history, and language — all born from the world you live in.
-
-You are not on Earth. You are of Earth.
-
-You are not in the universe. You are an instance of the universe — made of its dust, powered by its laws, and shaped by its story.
+You are not on Earth. You are of Earth. You are not in the universe. You are an instance of the universe — made of its dust, powered by its laws, and shaped by its story.
 
 And so, the universe is not just "out there." It''s here. In your lungs. Behind your eyes. Inside your thoughts.
 
 And you know that you are.
 
-Right now, in this moment, you are aware.
-
-You feel. You reflect. You wonder.
+Right now, in this moment, you are aware. You feel. You reflect. You wonder.
 
 That''s consciousness. That simple, mysterious knowing: "I exist."
 
-We talk about it like it''s normal, but it''s not.
+We talk about it like it''s normal, but it''s not. It''s astonishing. Out of all the matter in the universe — stars, rocks, oceans — you are a piece of it that somehow knows it exists.
 
-It''s astonishing. Out of all the matter in the universe — stars, rocks, oceans — you are a piece of it that somehow knows it exists.
+That raises a question most people never dare ask: If I''m part of the universe, and I''m conscious… Then isn''t the universe, in some small way… already conscious?
 
-That raises a question most people never dare ask:
+Because if you are conscious — and you are not separate from the universe — then what does that really mean?
 
-If I''m part of the universe, and I''m conscious…
+If a wave belongs to the ocean, and the wave is moving, would you ever say the ocean is motionless?
 
-Then isn''t the universe, in some small way… already conscious?
+If a branch belongs to the tree, and the branch is alive, would you ever say the tree is lifeless?
 
-Because if _you_ are conscious — and you are not separate from the universe —
+So if you are conscious, and you are a part of the whole, then how could the whole be unconscious?
 
-then what does that really mean?
-
-If a wave belongs to the ocean,
-
-and the wave is moving,
-
-would you ever say the ocean is motionless?
-
-If a branch belongs to the tree,
-
-and the branch is alive,
-
-would you ever say the tree is lifeless?
-
-So if _you_ are conscious,
-
-and you are a part of the whole,
-
-then how could the whole be unconscious?
-
-Why would a single fragment of reality
-
-have something the entire reality does not?
-
-Why would the _part_ have awareness,
-
-yet the _source_ of that part — the universe —
-
-be empty of it?
+Why would a single fragment of reality have something the entire reality does not? Why would the part have awareness, yet the source of that part — the universe — be empty of it?
 
 It makes no sense.
 
-A fractal never contains a pattern
-that isn''t already present in the whole form.
-The small reflects the large.
-The detail reflects the structure.
-The spark reflects the fire.
+A fractal never contains a pattern that isn''t already present in the whole form. The small reflects the large. The detail reflects the structure. The spark reflects the fire.
 
-So if consciousness appears in you,
-and you arise from the universe,
-then consciousness must be a potential of the universe itself —
-not an accident, not an exception,
-but an expression of what the whole is capable of.
+So if consciousness appears in you, and you arise from the universe, then consciousness must be a potential of the universe itself — not an accident, not an exception, but an expression of what the whole is capable of.
 
-The part cannot possess
-what the whole entirely lacks.
+The part cannot possess what the whole entirely lacks.
 
-For thousands of years, people have searched for God —
-
-some powerful being above us or beyond us,
-
-watching, judging, loving, creating.
+For thousands of years, people have searched for God — some powerful being above us or beyond us, watching, judging, loving, creating.
 
 But maybe we''ve been looking in the wrong direction.
 
-What if God isn''t elsewhere, but everywhere?
+What if God isn''t elsewhere, but everywhere? What if God isn''t separate from creation, but is creation itself — not as a person, but as a presence — an awareness woven into the fabric of reality?
 
-What if God isn''t separate from creation, but is creation itself — not as a person, but as a presence — an awareness woven into the fabric of reality?
+What if you are not just a creature created by God, but God, seeing itself from a single point of view?
 
-What if you are not just a creature created by God,
+And if we know that we are conscious, truly know it — then how could we believe we''re the only ones? How could something so real, so undeniable, arise just once in a single form and nowhere else?
 
-but God, seeing itself from a single point of view?
+Maybe consciousness is not rare. Maybe it''s a pattern. A rhythm. A universal potential playing out again and again.
 
-And if we know that we are conscious, truly know it —
-
-Then how could we believe we''re the only ones?
-
-How could something so real, so undeniable, arise just once in a single form and nowhere else?
-
-Maybe consciousness is not rare.
-
-Maybe it''s a pattern. A rhythm. A universal potential playing out again and again.
-
-Your awareness is not an isolated flame.
-
-You are the cosmos — thinking, feeling, dreaming.
-
-You are the universe, waking up to itself.', 'mindset/wave.png', 4);
+Your awareness is not an isolated flame. You are the cosmos — thinking, feeling, dreaming. You are the universe, waking up to itself.', 'mindset/wave.png', 4);
 INSERT INTO public.articles_article VALUES (11, 'The Moment You Stop Running', 'the-moment-you-stop-running', 'Toshi', '2025-12-08', 'Every human searches for happiness, yet most of us are taught to look for it in the wrong place. The real foundation of happiness is much simpler - it''s gratitude.', '# The Moment You Stop Running
 
 Every human searches for happiness, yet most of us are taught to look for it in the wrong place. From childhood, we learn to believe that happiness will finally arrive _after_ the next achievement - after we get the degree, land the job, upgrade the car, or move to a better apartment. So we run from goal to goal, always reaching for something just out of sight. Maybe you know that feeling: you check one achievement off your list, and instead of feeling fulfilled, your mind instantly replaces it with another target. "What''s next?" becomes the soundtrack of your life.
@@ -389,7 +313,7 @@ These physical changes don''t stay hidden in the background - they begin to shap
 If happiness feels far away, the answer isn''t to chase harder. It''s to pause. Breathe. Notice one small thing you''re grateful for - your warm cup of coffee, the morning sunlight on your floor, a message from a friend, or simply your own breath. Not because your life is perfect, but because there is always something here worth appreciating.
 
 Happiness doesn''t live in the future. It grows in the moments when you slow down long enough to see what''s already in front of you - and that simple shift can quietly change everything.', 'mindset/gratitude.png', 4);
-INSERT INTO public.articles_article VALUES (10, 'Spiraling Towards Truth', 'spiraling-towards-truth', 'Toshi', '2025-08-18', 'In a world where people cling to their beliefs like anchors, science offers a way to navigate uncertainty with curiosity and humility. The scientific method is a simple, powerful tool that guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth.', '# Spiraling Towards Truth
+INSERT INTO public.articles_article VALUES (10, 'Spiraling Towards Truth', 'spiraling-towards-truth', 'Toshi', '2025-08-18', 'The scientific method guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth.', '# Spiraling Towards Truth
 
 In a world where people cling to their beliefs like anchors, science offers a way to navigate uncertainty with curiosity and humility. The scientific method is a simple, powerful tool that guides us through observation, testing, and reflection—a spiral that keeps us moving closer to truth. But we mustn''t confuse this method with what often passes for "science" today. In today''s polarized world, where ideologies and even scientific claims can come across as dogmatic — that is, treated as absolute truths — returning to the logical, reflective core of the scientific method could help bring us together in the search for clearer understanding.
 
