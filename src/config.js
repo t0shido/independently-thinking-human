@@ -36,7 +36,7 @@ const config = {
   // Content configuration
   content: {
     // Sections available in the library
-    sections: ['mindset', 'politics', 'economics', 'technology', 'health', 'stories'],
+    sections: ['mindset', 'politics', 'economics', 'technology', 'stories'],
     
     // Media URL for images - environment-aware
     mediaUrl: (() => {
