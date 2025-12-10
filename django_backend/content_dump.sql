@@ -322,6 +322,29 @@ The scientific method is like a trusty guide for exploring the world. You notice
 At the heart of this method lies logic, the foundation that holds science together. Logic is the art of clear, consistent thinking—using rules to connect ideas and ensure conclusions follow from evidence. It''s what lets us spot patterns in observations, craft testable hypotheses, design fair experiments, and draw reliable conclusions. Without logic, our ideas would be scattered guesses, not systematic inquiries. Logic ensures we don''t jump to conclusions or mistake correlation for causation—like assuming rain alone makes plants grow without considering sunlight. It helps us avoid circular reasoning, where we assume what we''re trying to prove. And it guards against confirmation bias, our tendency to notice only evidence that supports our existing beliefs.
 
 But in today''s world, logic isn''t valued the way it used to be, and open discussion often takes a back seat. Many people are led more by emotions than by thoughtful questioning or critical reflection, especially in places like social media where outrage, fear, and quick reactions spread faster than calm reasoning. At the same time, we''ve become less willing to engage in reflective conversations with people who hold different opinions. It would be good if we approached conversations the way the scientific method teaches us to think—slowing down, examining ideas carefully, and staying open to dialogue. That willingness to think for ourselves—and to discuss respectfully—keeps our understanding grounded, honest, and alive.', 'mindset/spiraling_towards_truth.png', 1);
+INSERT INTO public.articles_article VALUES (12, 'The Hidden Game', 'the-hidden-game', 'Toshi Edelmann', '2025-12-10', 'Inflation is not just rising prices—it''s a devaluation of money that affects everyone differently, widening inequality and forcing you into a game you never agreed to play.', '# The Hidden Game
+
+You surely have noticed it—that creeping feeling that your paycheck doesn''t stretch as far as it used to. The coffee you grab on the way to work, the loaf of bread at the supermarket, even a night out with friends—suddenly, everything costs more. You''ve heard the word inflation, but most of us think it simply means "things are getting expensive." The truth is far more shocking—and far more unsettling.
+
+At its core, inflation is a devaluation of money. When money becomes less valuable, you need more of it to buy the same products. But how does money actually lose its value?
+
+Imagine a small, peaceful tribe living in a lush valley. They don''t use coins or paper bills—they use marbles. Each marble is carefully crafted by hand, polished until it shines. It takes days, sometimes weeks, to make one. Life in the village runs smoothly because everyone knows the value of a marble. Trade is fair, people are happy, and the world feels balanced.
+
+Now, imagine outsiders discover the tribe''s marbles. They are clever and skilled, and they have a way to produce marbles quickly and in large quantities—much faster than the villagers can. Overnight, a flood of new marbles appears, spilling into every home and every market.
+
+At first, it seems exciting—everyone has more to trade, more to enjoy. But the excitement doesn''t last. The new marbles make the old ones less special. One marble no longer buys as much as it used to. The villagers who spent weeks crafting each marble feel frustrated and powerless. Their carefully balanced system begins to wobble under the sudden flood of new currency.
+
+This is exactly how modern money works. Central banks—the institutions that control the supply of money—can create it out of thin air. When too much new money enters the economy, the value of each dollar drops. Prices rise. Your money buys less, and your paycheck rarely keeps pace.
+
+And just like in the village, this new money doesn''t affect everyone equally. Some of it is handed out through subsidies, benefits, or "free" government programs—but even that money isn''t truly free, because it contributes to the overall inflation that everyone later pays for. Meanwhile, the largest share still flows first to those already in power—institutions, corporations, and wealthy individuals who can use it to buy assets and grow their wealth. Ordinary people, on the other hand, are left dealing with rising prices, shrinking purchasing power, and the slow erosion of their savings.
+
+On top of that, much of the newly created money is issued as debt. That means the government eventually has to repay it—with interest—and it does so using tax money, which ultimately comes from you.
+
+As a result, the system widens inequality at an accelerating pace. People who already own assets—like houses, stocks, or companies—see their wealth grow because inflation pushes those asset prices higher. In the end, money always flows into things. When people realize their cash is losing value, they try to protect it by buying assets—homes, shares, businesses, anything that might hold or increase in value. This rush to escape devaluing money drives asset prices up even further. Companies, investors, and property owners receive most of this incoming money, which is why wealth keeps concentrating at the top. But people who depend on their salaries or savings experience the opposite: their income loses value, their savings buy less and less, and life becomes more expensive. Over time, the wealthy pull further ahead while everyone else struggles to keep up.
+
+This widening gap doesn''t just affect wallets—it affects society itself. As the rich grow richer and the poor fall further behind, frustration and tension rise. If it continues long enough, this imbalance can lead to deep social instability within a country.
+
+And this is where the personal impact becomes impossible to ignore. Understanding how inflation truly works reveals why simply holding onto money is no longer a safe way to protect your wealth. When money constantly loses value, you''re pushed into a difficult position: you have to "gamble" your savings by putting them into assets just to keep pace. Inflation turns everyone into an unwilling participant in a game they never agreed to play.', 'economics/the-hidden-game.png', 6);
 
 
 --
@@ -365,6 +388,7 @@ INSERT INTO public.articles_tag VALUES (34, 'logic');
 INSERT INTO public.articles_tag VALUES (35, 'gratitude');
 INSERT INTO public.articles_tag VALUES (36, 'happiness');
 INSERT INTO public.articles_tag VALUES (37, 'self-improvement');
+INSERT INTO public.articles_tag VALUES (38, 'wealth');
 
 
 --
@@ -414,13 +438,17 @@ INSERT INTO public.articles_tag_articles VALUES (40, 35, 11);
 INSERT INTO public.articles_tag_articles VALUES (41, 36, 11);
 INSERT INTO public.articles_tag_articles VALUES (42, 11, 11);
 INSERT INTO public.articles_tag_articles VALUES (43, 37, 11);
+INSERT INTO public.articles_tag_articles VALUES (44, 31, 12);
+INSERT INTO public.articles_tag_articles VALUES (45, 23, 12);
+INSERT INTO public.articles_tag_articles VALUES (46, 28, 12);
+INSERT INTO public.articles_tag_articles VALUES (47, 38, 12);
 
 
 --
 -- Name: articles_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_article_id_seq', 11, true);
+SELECT pg_catalog.setval('public.articles_article_id_seq', 12, true);
 
 
 --
@@ -434,14 +462,14 @@ SELECT pg_catalog.setval('public.articles_section_id_seq', 8, true);
 -- Name: articles_tag_articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_tag_articles_id_seq', 43, true);
+SELECT pg_catalog.setval('public.articles_tag_articles_id_seq', 47, true);
 
 
 --
 -- Name: articles_tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_tag_id_seq', 37, true);
+SELECT pg_catalog.setval('public.articles_tag_id_seq', 38, true);
 
 
 --
