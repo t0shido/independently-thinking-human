@@ -117,7 +117,7 @@ const LibrarySection = ({ section }) => {
             disabled={currentPage === 1}
             className="pagination-btn"
           >
-            ← Previous
+            Previous
           </button>
           <span className="pagination-info">
             Page {currentPage} of {totalPages}
@@ -127,7 +127,7 @@ const LibrarySection = ({ section }) => {
             disabled={currentPage === totalPages}
             className="pagination-btn"
           >
-            Next →
+            Next
           </button>
         </div>
       )}
@@ -266,7 +266,7 @@ const Overview = () => {
             disabled={currentPage === 1}
             className="pagination-btn"
           >
-            ← Previous
+            Previous
           </button>
           <span className="pagination-info">
             Page {currentPage} of {totalPages}
@@ -276,7 +276,7 @@ const Overview = () => {
             disabled={currentPage === totalPages}
             className="pagination-btn"
           >
-            Next →
+            Next
           </button>
         </div>
       )}
