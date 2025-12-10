@@ -35,6 +35,11 @@ const LibrarySection = ({ section }) => {
     loadPosts();
   }, [section]);
 
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
   if (loading) {
     return <div className="library-content">
       <div className="loading-message">Loading...</div>
@@ -117,7 +122,7 @@ const LibrarySection = ({ section }) => {
             disabled={currentPage === 1}
             className="pagination-btn"
           >
-            Previous
+            &lt;
           </button>
           <span className="pagination-info">
             Page {currentPage} of {totalPages}
@@ -127,7 +132,7 @@ const LibrarySection = ({ section }) => {
             disabled={currentPage === totalPages}
             className="pagination-btn"
           >
-            Next
+            &gt;
           </button>
         </div>
       )}
@@ -141,6 +146,11 @@ const Overview = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const POSTS_PER_PAGE = 10;
+
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
   
   // Function to fetch articles from each section
   const fetchAllSectionArticles = async () => {
@@ -266,7 +276,7 @@ const Overview = () => {
             disabled={currentPage === 1}
             className="pagination-btn"
           >
-            Previous
+            &lt;
           </button>
           <span className="pagination-info">
             Page {currentPage} of {totalPages}
@@ -276,7 +286,7 @@ const Overview = () => {
             disabled={currentPage === totalPages}
             className="pagination-btn"
           >
-            Next
+            &gt;
           </button>
         </div>
       )}
