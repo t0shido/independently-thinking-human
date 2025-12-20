@@ -37,7 +37,7 @@ const LibrarySection = ({ section }) => {
 
   // Scroll to top when page changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentPage]);
 
   if (loading) {
@@ -149,7 +149,7 @@ const Overview = () => {
 
   // Scroll to top when page changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentPage]);
   
   // Function to fetch articles from each section
