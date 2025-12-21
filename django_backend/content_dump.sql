@@ -423,6 +423,25 @@ A healthy society recognizes these differences and protects them. The economy sh
 These areas should remain separate, yet in dialogue. The economy should not dictate values. Politics should not control creativity. Instead, culture should guide both, offering ethical direction rather than power.
 
 No system is perfect. But by respecting the different principles that govern work, rights, and meaning, society can move closer to something better—a society that serves people without reducing them to numbers, defining their worth by wealth, or silencing their individuality.', 'politics/two_systems_one_flaw.png', 3);
+INSERT INTO public.articles_article VALUES (15, 'Boom and Bust', 'boom-and-bust', 'Toshi', '2025-12-21', 'Financial crises follow a predictable pattern driven by central banks. Easy money fuels bubbles, then tightening triggers crashes—leaving ordinary people to pay the price.', '# Boom and Bust
+
+Modern financial crises don''t usually just appear out of nowhere. They follow a pattern that has repeated for decades, across countries and markets. At the center of this pattern are central banks, with the Federal Reserve—the U.S. central bank—playing a key role. These institutions have enormous power—they control the flow of money, influence how much people and companies are willing to take risks, and can indirectly decide when bubbles form and when they pop.
+
+The cycle often starts when central banks try to make the economy grow faster. They do this by lowering interest rates—the cost of borrowing money—and putting more money into the system, which is called increasing liquidity. When money is easy to borrow, people start to borrow more. Companies take loans to invest, households borrow for homes or cars, and investors borrow to make even more money. This borrowing, called leverage, is like using other people''s money to try to make yourself richer. It works great when things are going well, but it can also be very risky.
+
+As more borrowed money floods the markets, asset prices—like stocks, houses, or even cryptocurrencies—start to rise. But often, they rise not because companies are making more money or producing more value, but simply because there''s so much money chasing opportunities that prices go up almost automatically. People start believing that prices will always rise, and this confidence fuels more borrowing and more risk-taking.
+
+Over time, prices get disconnected from reality. Houses cost far more than they are really worth, stocks go up even though the companies aren''t growing, and other assets become wildly overvalued. This is what we call a bubble. It looks stable because everyone is making money and nothing seems wrong—but underneath, risk is piling up quietly.
+
+Eventually, the central banks, which are responsible for creating these risky conditions, see that the system has become too unstable to ignore. They reverse course. Interest rates go up, borrowing becomes more expensive, and liquidity—how much money is available—shrinks. Suddenly, the cheap money that encouraged risk-taking disappears. People and institutions who borrowed too much are forced to sell assets to pay off their debt. This selling triggers even more selling, and what started as a correction quickly becomes a crash.
+
+The crash hits individuals and smaller investors hard. People lose savings, retirement funds, and even their homes. But large banks and important financial institutions often get rescued by government intervention. While this is said to protect the economy, it also transfers private losses onto ordinary people, while the big players remain safe and often profit later from buying assets cheaply.
+
+After the crash, the cycle starts again. Asset prices are lower, some people are still struggling, but central banks and wealthy investors are ready to take advantage of new opportunities. This creates a repeating pattern of boom, bust, and increasing inequality.
+
+For everyday people, this system is confusing and frustrating. You''re told you need to invest to protect your money from inflation, but because the Federal Reserve and other central banks create these boom-and-bust cycles, investing often feels like gambling. Money that seemed safe yesterday can lose value tomorrow. Crashes can happen suddenly, and careful planning doesn''t always protect you. It''s stressful, unfair, and makes people feel powerless.
+
+Until central banks are held accountable for the consequences of their actions, this pattern will continue. Crises won''t be "accidents"—they''re predictable results of policies designed to push growth and then pull it back. True stability can only come when responsibility, discipline, and natural consequences are allowed to exist in the financial system. Otherwise, the same cycles will repeat, and ordinary people will keep paying the price while the powerful stay protected.', 'economics/boom_and_bust.png', 6);
 
 
 --
@@ -474,6 +493,9 @@ INSERT INTO public.articles_tag VALUES (42, 'capitalism');
 INSERT INTO public.articles_tag VALUES (43, 'socialism');
 INSERT INTO public.articles_tag VALUES (44, 'freedom');
 INSERT INTO public.articles_tag VALUES (45, 'equality');
+INSERT INTO public.articles_tag VALUES (46, 'central-banks');
+INSERT INTO public.articles_tag VALUES (47, 'financial-crisis');
+INSERT INTO public.articles_tag VALUES (48, 'inequality');
 
 
 --
@@ -536,13 +558,17 @@ INSERT INTO public.articles_tag_articles VALUES (53, 43, 14);
 INSERT INTO public.articles_tag_articles VALUES (54, 6, 14);
 INSERT INTO public.articles_tag_articles VALUES (55, 44, 14);
 INSERT INTO public.articles_tag_articles VALUES (56, 45, 14);
+INSERT INTO public.articles_tag_articles VALUES (57, 23, 15);
+INSERT INTO public.articles_tag_articles VALUES (58, 46, 15);
+INSERT INTO public.articles_tag_articles VALUES (59, 47, 15);
+INSERT INTO public.articles_tag_articles VALUES (60, 48, 15);
 
 
 --
 -- Name: articles_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_article_id_seq', 14, true);
+SELECT pg_catalog.setval('public.articles_article_id_seq', 15, true);
 
 
 --
@@ -556,14 +582,14 @@ SELECT pg_catalog.setval('public.articles_section_id_seq', 8, true);
 -- Name: articles_tag_articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_tag_articles_id_seq', 56, true);
+SELECT pg_catalog.setval('public.articles_tag_articles_id_seq', 60, true);
 
 
 --
 -- Name: articles_tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toshi
 --
 
-SELECT pg_catalog.setval('public.articles_tag_id_seq', 45, true);
+SELECT pg_catalog.setval('public.articles_tag_id_seq', 48, true);
 
 
 --
