@@ -7,9 +7,10 @@
 .dropdown-button {
   width: 100%;
   padding: 12px 24px;
-  background: var(--foreground, #3d3428);
+  background: #f5f5f5;
   border: none;
-  color: white;
+  border-bottom: 1px solid rgba(107, 78, 61, 0.2);
+  color: var(--foreground, #3d3428);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,7 +29,7 @@
 .dropdown-arrow {
   border-style: solid;
   border-width: 6px 6px 0 6px;
-  border-color: white transparent transparent transparent;
+  border-color: var(--foreground, #3d3428) transparent transparent transparent;
   margin-left: 8px;
   transition: transform 0.3s ease;
 }
@@ -42,17 +43,18 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--foreground, #3d3428);
+  background: #f5f5f5;
   overflow: hidden;
   animation: slideDown 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(107, 78, 61, 0.2);
   z-index: 2000;
 }
 
 .dropdown-item {
   display: block;
   padding: 12px 24px;
-  color: white;
+  color: var(--foreground, #3d3428);
   text-decoration: none;
   transition: background-color 0.3s ease;
   opacity: 0.8;
@@ -61,11 +63,14 @@
 }
 
 .dropdown-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(107, 78, 61, 0.1);
+  opacity: 1;
 }
 
 .dropdown-item.active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(107, 78, 61, 0.15);
+  opacity: 1;
+  font-weight: 500;
 }
 
 @keyframes slideDown {
