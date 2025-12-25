@@ -166,7 +166,7 @@ body {
 
 .main-title {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 80px;
+  font-size: clamp(36px, 8vw, 80px);
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -176,21 +176,30 @@ body {
 }
 
 .main-title.mobile-view {
-  font-size: 48px;
-  line-height: 1.1;
+  font-size: clamp(32px, 10vw, 48px);
+  line-height: 1.15;
   letter-spacing: -0.01em;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0 0.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-content.mobile-view {
   padding: 1rem;
+  padding-top: 80px;
   text-align: left;
+  justify-content: flex-start;
 }
 
 .hero-content.mobile-view p {
-  font-size: 17px !important;
+  font-size: clamp(14px, 4vw, 17px) !important;
   line-height: 1.47;
   font-weight: 400;
   letter-spacing: -0.022em;
+  margin-left: 0;
+  padding: 0 0.5rem;
 }
 
 .content-section {
@@ -460,8 +469,8 @@ body {
     padding: 60px 16px;
   }
   
-  .main-title {
-    font-size: 40px;
+  .decorative-circle {
+    display: none;
   }
   
   .intro-text {
@@ -475,10 +484,6 @@ body {
   
   .intro-text h2 {
     font-size: 16px;
-  }
-  
-  .intro-text h1 {
-    font-size: 32px;
   }
   
   .intro-text {
