@@ -18,6 +18,11 @@
   font-size: 1rem;
   font-family: 'Georgia', 'Times New Roman', serif;
   letter-spacing: 0.5px;
+  outline: none;
+}
+
+.dropdown-button:focus {
+  outline: none;
 }
 
 .current-section {
