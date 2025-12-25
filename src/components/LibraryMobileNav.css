@@ -6,8 +6,9 @@
 }
 
 .library-mobile-nav * {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  tap-highlight-color: transparent !important;
 }
 
 .dropdown-button {
@@ -83,15 +84,22 @@
   opacity: 0.8;
   font-size: 1rem;
   letter-spacing: 0.5px;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  tap-highlight-color: transparent !important;
 }
 
 .dropdown-item:focus {
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dropdown-item:active {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .dropdown-item:hover {
