@@ -69,20 +69,21 @@
 }
 
 .library-nav {
-  background-color: #4d4d4d;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(to bottom, var(--card) 0%, var(--background) 100%);
+  border-bottom: 1px solid rgba(107, 78, 61, 0.15);
+  box-shadow: 0 1px 3px rgba(107, 78, 61, 0.05);
   position: sticky;
   top: 64px;
   z-index: 5;
   width: 100%;
-  margin-bottom: 1rem;
+  font-family: 'Georgia', 'Times New Roman', serif;
 }
 
 .library-nav-links {
   display: flex;
-  gap: 1.5rem;
-  padding: 0.75rem 2rem;
-  max-width: 1200px;
+  gap: 3rem;
+  padding: 1.25rem 1.5rem;
+  max-width: 980px;
   margin: 0 auto;
   align-items: center;
   overflow-x: auto;
@@ -90,44 +91,51 @@
 }
 
 .library-nav a {
-  color: white !important;
+  color: var(--muted-foreground) !important;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 13px;
   font-weight: 500;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-  padding: 0.5rem 1rem;
-  letter-spacing: 0.5px;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0.75rem;
   position: relative;
   white-space: nowrap;
+  border-radius: 4px;
+  outline: none;
 }
 
 .library-nav a:hover {
-  opacity: 1;
+  color: var(--mahogany) !important;
+  background-color: transparent;
 }
 
 .library-nav a.active {
-  opacity: 1;
+  color: var(--mahogany) !important;
+  background-color: transparent;
+}
+
+.library-nav a:focus {
+  outline: none;
+  background-color: transparent;
 }
 
 .library-nav a.active::after {
   content: '';
   position: absolute;
-  width: calc(100% - 2rem);
+  width: calc(100% - 1.5rem);
   height: 2px;
-  bottom: -4px;
-  left: 1rem;
-  background-color: white;
-  transform: scaleX(1);
+  bottom: 0.25rem;
+  left: 0.75rem;
+  background-color: var(--mahogany);
+  border-radius: 2px;
 }
 
 .library-content {
-  max-width: 1200px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 80px 22px;
   position: relative;
-  padding-top: 4.5rem;
 }
 
 .library-search-mobile {
@@ -179,19 +187,18 @@
 }
 
 .book-card {
-  background: var(--card-background);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: transparent;
+  border-radius: 0;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: opacity 0.3s ease;
   text-decoration: none !important;
   color: var(--text-color) !important;
-  border: 1px solid var(--border-color);
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
 }
 
 .book-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  opacity: 0.8;
   text-decoration: none !important;
   color: var(--text-color) !important;
 }
@@ -211,20 +218,12 @@
 .book-cover {
   min-height: 200px;
   position: relative;
-  background: var(--card-background-secondary);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.book-cover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(0,0,0,0.1), transparent);
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .book-cover img {
@@ -248,15 +247,23 @@
 }
 
 .card-content h3 {
-  font-size: 1.5rem;
-  margin: 0 0 1rem 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: 0.007em;
+  margin: 0 0 0.75rem 0;
   color: var(--text-color) !important;
 }
 
 .card-content .description {
-  color: var(--text-color-secondary) !important;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: var(--text-muted) !important;
+  font-size: 17px;
+  line-height: 1.47;
+  font-weight: 400;
+  letter-spacing: -0.022em;
   margin: 0 0 1rem 0;
-  line-height: 1.5;
 }
 
 .card-content .author {
@@ -289,29 +296,30 @@
 .library-post {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 80px 20px;
+  padding-top: 150px;
   text-decoration: none;
   color: var(--text-color);
-  transition: transform 0.3s ease;
+  transition: none;
 }
 
 .library-post:hover {
-  transform: translateY(-4px);
+  transform: none;
   text-decoration: none;
   color: var(--text-color);
 }
 
 .library-post-content {
-  padding: 2rem;
-  border-radius: 12px;
-  background-color: var(--card-background);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
   height: 100%;
-  transition: all 0.3s ease;
+  transition: none;
 }
 
 .library-post-content:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: none;
 }
 
 .library-post-metadata {

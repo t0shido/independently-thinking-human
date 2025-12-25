@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Library from './pages/Library';
 import Admin from './pages/Admin';
 import Contact from './pages/Contact';
+import Data from './pages/Data';
 import MobileNav from './components/MobileNav';
 import chaosOrderImage from '../content/home/chaos_and_order.png';
 import homeContent from '../content/home/intro.json';
@@ -19,11 +21,51 @@ function App() {
 function AppContent() {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const [isVisible, setIsVisible] = useState(false);
+  const [imageScale, setImageScale] = useState(1);
 
   // Split content into paragraphs
   const paragraphs = homeContent.content.split('\n\n');
   const beforeImage = paragraphs.slice(0, 3).join('\n\n');
   const afterImage = paragraphs.slice(3).join('\n\n');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      // Show animation when user scrolls past 30% of viewport
+      // Hide when scrolling back up above 20%
+      if (scrollPosition > windowHeight * 0.3) {
+        setIsVisible(true);
+      } else if (scrollPosition < windowHeight * 0.2) {
+        setIsVisible(false);
+      }
+
+      // Image zoom effect - calculate scale based on scroll position
+      const imageElement = document.querySelector('.hero-image-container');
+      if (imageElement) {
+        const imageTop = imageElement.getBoundingClientRect().top;
+        const imageHeight = imageElement.offsetHeight;
+        const windowCenter = windowHeight / 2;
+        
+        // Calculate distance from center of viewport
+        const distanceFromCenter = Math.abs(imageTop + imageHeight / 2 - windowCenter);
+        const maxDistance = windowHeight;
+        
+        // Scale from 1.0 to 1.2 based on distance from center
+        // Closer to center = larger scale
+        const scale = 1.2 - (distanceFromCenter / maxDistance) * 0.2;
+        setImageScale(Math.max(1, Math.min(1.2, scale)));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Check on mount in case already scrolled
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="app">
@@ -54,10 +96,10 @@ function AppContent() {
           <div className={`hero-content ${isMobile ? 'mobile-view' : ''}`}>
             <h1 className={`main-title ${isMobile ? 'mobile-view' : ''}`}>INDEPENDENTLY<br />THINKING HUMAN.</h1>
             <p style={{ 
-              fontSize: isMobile ? '1rem' : '1.5rem', 
+              fontSize: isMobile ? '0.9rem' : '1.1rem', 
               opacity: 0.9, 
               letterSpacing: '1px',
-              marginLeft: '0rem'
+              marginLeft: isMobile ? '0rem' : '3rem'
             }}>
               Balancing between Order and Chaos while navigating through Life's Complexities
             </p>
@@ -73,7 +115,7 @@ function AppContent() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={
-            <div className="content-section">
+            <div className={`content-section ${isVisible ? 'visible' : ''}`}>
               <section className="featured-posts">
                 <div className="intro-text" style={{
                   position: 'relative'
@@ -92,8 +134,13 @@ function AppContent() {
                         top: 0,
                         left: 0,
                         width: '100%',
-                        height: '100%'
-                      } : {}}
+                        height: '100%',
+                        transform: `scale(${imageScale})`,
+                        transition: 'transform 0.5s ease-out'
+                      } : {
+                        transform: `scale(${imageScale})`,
+                        transition: 'transform 0.5s ease-out'
+                      }}
                     />
                   </div>
                   {afterImage.split('\n\n').map((paragraph, index) => (
@@ -106,18 +153,7 @@ function AppContent() {
           <Route path="/library" element={<Library />} />
           <Route path="/library/:section" element={<Library />} />
           <Route path="/library/:section/:slug" element={<Library />} />
-          <Route path="/data" element={
-            <div className="default-page">
-              <div className="content-wrapper">
-                <h1>Data Analysis</h1>
-                <p className="subtitle">Exploring patterns and insights through data</p>
-                <div className="coming-soon">
-                  <p>This section is currently under development.</p>
-                  <p>Check back soon for interactive data visualizations and analysis.</p>
-                </div>
-              </div>
-            </div>
-          } />
+          <Route path="/data" element={<Data />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
