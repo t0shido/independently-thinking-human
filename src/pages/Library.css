@@ -52,20 +52,11 @@
 
 .library-content.mobile-view {
   padding: 1rem;
-  padding-top: 120px;
+  padding-top: 120px !important;
   margin-top: 0;
 }
 
-/* Move article content down in mobile */
-.library-content.mobile-view .library-post {
-  margin-top: 5rem;
-}
 
-/* Specific styles for overview page content */
-.library-content > .overview-grid.mobile-view {
-  margin-top: 0;
-  padding-top: 0;
-}
 
 /* Reduce gap between featured and secondary section in overview */
 .library-content > .overview-grid.mobile-view .featured-section {

@@ -45,6 +45,11 @@ const LibraryMobileNav = () => {
                 to={`/library/${section.path}`}
                 className="dropdown-item"
                 onClick={() => setIsOpen(false)}
+                style={{
+                  WebkitTapHighlightColor: 'transparent',
+                  outline: 'none',
+                  border: 'none'
+                }}
               >
                 {section.label}
               </Link>
