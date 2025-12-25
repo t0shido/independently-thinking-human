@@ -20,6 +20,10 @@ const MobileNav = () => {
       </button>
       
       <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
+        <button className="close-button" onClick={toggleMenu}>
+          <span></span>
+          <span></span>
+        </button>
         <div className="mobile-menu-content">
           <Link to="/" className="mobile-nav-link" onClick={toggleMenu}>HOME</Link>
           <Link to="/library" className="mobile-nav-link" onClick={toggleMenu}>LIBRARY</Link>
