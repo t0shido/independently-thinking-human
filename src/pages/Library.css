@@ -36,7 +36,8 @@
 }
 
 .overview-grid.mobile-view {
-  gap: 2px;
+  gap: 1rem;
+  padding: 0;
 }
 
 /* Only apply to overview page (when no section is selected) */
@@ -49,8 +50,8 @@
 }
 
 .library-content.mobile-view {
-  padding: 2px;
-  padding-top: 15rem;
+  padding: 1rem;
+  padding-top: 8rem;
 }
 
 /* Move article content down in mobile */
@@ -60,7 +61,8 @@
 
 /* Specific styles for overview page content */
 .library-content > .overview-grid.mobile-view {
-  margin-top: -5rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* Reduce gap between featured and secondary section in overview */
@@ -164,8 +166,8 @@
 }
 
 .overview-grid.mobile-view {
-  padding-top: calc(56px + 0.5rem);
-  gap: 0.75rem;
+  padding-top: 0;
+  gap: 1rem;
 }
 
 .featured-section {
@@ -175,8 +177,8 @@
 }
 
 .featured-section.mobile-view {
-  padding-top: 0.25rem;
-  margin-bottom: 0.75rem;
+  padding-top: 0;
+  margin-bottom: 1rem;
 }
 
 .secondary-section {
