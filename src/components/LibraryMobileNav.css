@@ -11,6 +11,19 @@
   tap-highlight-color: transparent !important;
 }
 
+.library-mobile-nav a,
+.library-mobile-nav a:link,
+.library-mobile-nav a:visited,
+.library-mobile-nav a:hover,
+.library-mobile-nav a:active,
+.library-mobile-nav a:focus {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
 .dropdown-button {
   width: 100%;
   padding: 12px 24px;
