@@ -103,6 +103,11 @@
   -webkit-user-select: none !important;
   user-select: none !important;
   tap-highlight-color: transparent !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none !important;
 }
 
 .dropdown-item:focus {

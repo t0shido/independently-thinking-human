@@ -147,10 +147,6 @@
   color: var(--primary-color);
 }
 
-.library-content.mobile-view {
-  padding: 1rem;
-  padding-top: calc(56px + 1rem);
-}
 
 .overview-grid {
   display: flex;
