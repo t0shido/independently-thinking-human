@@ -136,10 +136,10 @@ function AppContent() {
                         width: '100%',
                         height: '100%',
                         transform: `scale(${imageScale})`,
-                        transition: 'transform 0.5s ease-out'
+                        transition: 'transform 1.2s ease-out'
                       } : {
                         transform: `scale(${imageScale})`,
-                        transition: 'transform 0.5s ease-out'
+                        transition: 'transform 1.2s ease-out'
                       }}
                     />
                   </div>
