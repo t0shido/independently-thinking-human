@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Article, Section, Tag
 from .serializers import ArticleSerializer
@@ -17,7 +18,11 @@ class ArticleViewSet(viewsets.ViewSet):
     """
     ViewSet for handling article operations.
     Implements endpoints that match the Express.js backend.
+    
+    SECURITY: Write operations (create, update, delete) require authentication.
     """
+    # Require authentication for write operations
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def list(self, request, section=None):
         """

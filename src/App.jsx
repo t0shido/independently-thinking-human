@@ -3,7 +3,8 @@ import { isMobile } from 'react-device-detect';
 import { useEffect, useState } from 'react';
 import './App.css';
 import Library from './pages/Library';
-import Admin from './pages/Admin';
+// import Admin from './pages/Admin'; // INSECURE - DO NOT USE
+import AdminSecure from './pages/AdminSecure'; // Use this instead
 import Contact from './pages/Contact';
 import Data from './pages/Data';
 import MobileNav from './components/MobileNav';
@@ -155,7 +156,8 @@ function AppContent() {
           <Route path="/library/:section/:slug" element={<Library />} />
           <Route path="/data" element={<Data />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/admin" element={<Admin />} />
+          {/* ADMIN ROUTE DISABLED - Follow SECURITY_FIXES.md to enable secure version */}
+          {/* After setup: <Route path="/admin" element={<AdminSecure />} /> */}
         </Routes>
       </main>
 

@@ -67,7 +67,7 @@ export const getArticles = async (section) => {
 };
 
 // Create a new article
-export const createArticle = async (articleData) => {
+export const createArticle = async (articleData, token) => {
   try {
     const formData = new FormData();
     
@@ -83,8 +83,14 @@ export const createArticle = async (articleData) => {
       formData.append('image', articleData.image);
     }
     
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Token ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}/articles`, {
       method: 'POST',
+      headers: headers,
       body: formData,
     });
     
@@ -101,7 +107,7 @@ export const createArticle = async (articleData) => {
 };
 
 // Update an existing article
-export const updateArticle = async (section, slug, articleData) => {
+export const updateArticle = async (section, slug, articleData, token) => {
   try {
     const formData = new FormData();
     
@@ -117,8 +123,14 @@ export const updateArticle = async (section, slug, articleData) => {
       formData.append('image', articleData.image);
     }
     
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Token ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}/articles/${section}/${slug}`, {
       method: 'PUT',
+      headers: headers,
       body: formData,
     });
     
@@ -135,10 +147,18 @@ export const updateArticle = async (section, slug, articleData) => {
 };
 
 // Delete an article
-export const deleteArticle = async (section, slug) => {
+export const deleteArticle = async (section, slug, token) => {
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Token ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}/articles/${section}/${slug}`, {
       method: 'DELETE',
+      headers: headers,
     });
     
     if (!response.ok) {
