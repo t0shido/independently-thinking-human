@@ -39,11 +39,23 @@ pip install -r requirements.txt
 
 ### 4. Configure environment variables
 
-The `.env` file contains default settings, but you should update the database credentials to match your PostgreSQL setup:
+Create a `.env` file in `django_backend/`.
+
+For local development, use values similar to:
 
 ```
-DATABASE_URL=postgresql://username:password@localhost:5432/independently_thinking_human
+DEBUG=True
+DJANGO_SECRET_KEY=dev-only-secret-key
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=
+DB_NAME=independently_thinking_human
+DB_USER=your_local_db_user
+DB_PASSWORD=
+DB_HOST=localhost
+DB_PORT=5432
 ```
+
+For production, copy `env.template` and set `DEBUG=False` with real values for `DJANGO_SECRET_KEY`, `DATABASE_URL`, `CORS_ALLOWED_ORIGINS`, and `CSRF_TRUSTED_ORIGINS`.
 
 ### 5. Run migrations
 
@@ -67,10 +79,10 @@ python import_content.py
 ### 6. Run the development server
 
 ```bash
-python manage.py runserver 3001
+python manage.py runserver 8000
 ```
 
-The server will be available at http://localhost:3001/
+The server will be available at http://127.0.0.1:8000/
 
 ## API Endpoints
 

@@ -23,28 +23,21 @@ export function clearCache() {
  * Get all posts for a specific section using the API
  * Falls back to file-based loading if API fails
  */
-export async function getSectionPosts(section) {
-  console.log('Loading posts for section:', section);
-  
+export async function getSectionPosts(section, { forceRefresh = false } = {}) {
   try {
-    // Check if we have a cached response
-    if (apiCache[section]) {
-      console.log('Using cached data for section:', section);
+    if (!forceRefresh && apiCache[section]) {
       return apiCache[section];
     }
-    
-    // Try to fetch from API first
-    console.log('Fetching from API for section:', section);
+
     const posts = await getArticles(section);
-    
-    // Cache the response
     apiCache[section] = posts;
-    
-    console.log(`Loaded ${posts.length} posts from API for section:`, section);
     return posts;
   } catch (error) {
-    console.error('Error loading posts from API:', error);
-    console.log('Falling back to default section data');
+    if (import.meta.env?.DEV) {
+      console.error('Error loading posts from API:', error);
+    }
+    // On refresh failure, keep last-known cache if present
+    if (apiCache[section]) return apiCache[section];
     return SECTIONS[section] || [];
   }
 }

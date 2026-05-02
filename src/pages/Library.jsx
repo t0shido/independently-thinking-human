@@ -164,7 +164,7 @@ const Overview = () => {
       // Fetch articles from each section using the same function as LibrarySection
       const sectionPromises = sections.map(async (section) => {
         try {
-          const articles = await getSectionPosts(section);
+          const articles = await getSectionPosts(section, { forceRefresh: true });
           // Add section to each article (getSectionPosts might not include it)
           return articles.map(article => ({
             ...article,

@@ -21,6 +21,8 @@ function AdminSecure() {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('articles');
   const [articles, setArticles] = useState([]);
+  const [editingSlug, setEditingSlug] = useState(null);
+  const [editingSection, setEditingSection] = useState(null);
   const [newArticle, setNewArticle] = useState({
     title: '',
     author: 'Toshi',
@@ -170,10 +172,17 @@ function AdminSecure() {
         image: newArticle.image
       };
       
-      const result = await createArticle(articleData, token);
-      alert(`Article "${newArticle.title}" saved successfully!`);
-      
+      if (editingSlug) {
+        await updateArticle(editingSection || newArticle.section, editingSlug, articleData, token);
+        alert(`Article "${newArticle.title}" updated successfully!`);
+      } else {
+        await createArticle(articleData, token);
+        alert(`Article "${newArticle.title}" saved successfully!`);
+      }
+
       // Reset form
+      setEditingSlug(null);
+      setEditingSection(null);
       setNewArticle({
         title: '',
         author: 'Toshi',
@@ -184,7 +193,7 @@ function AdminSecure() {
         image: null,
         imagePreview: null
       });
-      
+
       loadArticles();
     } catch (error) {
       console.error('Error saving article:', error);
@@ -311,6 +320,8 @@ function AdminSecure() {
                       <button 
                         className="edit-button"
                         onClick={() => {
+                          setEditingSlug(article.slug);
+                          setEditingSection(newArticle.section);
                           setNewArticle({
                             title: article.title,
                             author: article.author,

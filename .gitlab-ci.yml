@@ -70,6 +70,8 @@ deploy:production:
       [ -z "$DJANGO_SECRET_KEY" ] && MISSING_VARS="$MISSING_VARS DJANGO_SECRET_KEY"
       [ -z "$DJANGO_ALLOWED_HOSTS" ] && MISSING_VARS="$MISSING_VARS DJANGO_ALLOWED_HOSTS"
       [ -z "$CSRF_TRUSTED_ORIGINS" ] && MISSING_VARS="$MISSING_VARS CSRF_TRUSTED_ORIGINS"
+      [ -z "$CORS_ALLOWED_ORIGINS" ] && MISSING_VARS="$MISSING_VARS CORS_ALLOWED_ORIGINS"
+      [ -z "$DATABASE_URL_WITH_PASSWORD" ] && MISSING_VARS="$MISSING_VARS DATABASE_URL_WITH_PASSWORD"
       if [ ! -z "$MISSING_VARS" ]; then
         echo "❌ Missing required GitLab CI/CD variables:$MISSING_VARS"
         echo "Please set these variables in GitLab Project → Settings → CI/CD → Variables"
@@ -170,6 +172,7 @@ deploy:production:
       DEBUG=False
       DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS
       CSRF_TRUSTED_ORIGINS=$CSRF_TRUSTED_ORIGINS
+      CORS_ALLOWED_ORIGINS=$CORS_ALLOWED_ORIGINS
       DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@localhost:5432/$DB_NAME
       MEDIA_URL=/media/
       ENV_EOF
@@ -180,7 +183,7 @@ deploy:production:
     # Upload and execute the deployment script
     - chmod +x auto_deploy.sh
     - scp auto_deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/auto_deploy.sh
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/auto_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' /tmp/auto_deploy.sh"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/auto_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' CORS_ALLOWED_ORIGINS='$CORS_ALLOWED_ORIGINS' /tmp/auto_deploy.sh"
     
     # Upload application files
     - echo "📦 Uploading application files..."
@@ -242,6 +245,7 @@ deploy:production:
       echo "DJANGO_SECRET_KEY='${DJANGO_SECRET_KEY}'" > .env
       echo "DJANGO_ALLOWED_HOSTS='${DJANGO_ALLOWED_HOSTS}'" >> .env
       echo "CSRF_TRUSTED_ORIGINS='${CSRF_TRUSTED_ORIGINS}'" >> .env
+      echo "CORS_ALLOWED_ORIGINS='${CORS_ALLOWED_ORIGINS}'" >> .env
       echo "DEBUG=${DEBUG}" >> .env
       echo "DATABASE_URL='${DATABASE_URL_WITH_PASSWORD}'" >> .env
       
@@ -342,7 +346,7 @@ deploy:production:
     
     - chmod +x app_deploy.sh
     - scp app_deploy.sh $PRODUCTION_USER@$PRODUCTION_SERVER:/tmp/app_deploy.sh
-    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/app_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY' DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' DEBUG=$DEBUG DATABASE_URL_WITH_PASSWORD='$DATABASE_URL_WITH_PASSWORD' /tmp/app_deploy.sh"
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "chmod +x /tmp/app_deploy.sh && PRODUCTION_PATH=$PRODUCTION_PATH DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY' DJANGO_ALLOWED_HOSTS='$DJANGO_ALLOWED_HOSTS' CSRF_TRUSTED_ORIGINS='$CSRF_TRUSTED_ORIGINS' CORS_ALLOWED_ORIGINS='$CORS_ALLOWED_ORIGINS' DEBUG=$DEBUG DATABASE_URL_WITH_PASSWORD='$DATABASE_URL_WITH_PASSWORD' /tmp/app_deploy.sh"
 
   when: manual
   only:
@@ -370,7 +374,7 @@ sync:database:
     - if [ ! -f "${BACKEND_DIR}/content_dump.sql" ]; then
         echo "❌ Content dump file not found at ${BACKEND_DIR}/content_dump.sql";
         echo "Please run the following command locally before triggering this job:";
-        echo "pg_dump -h localhost -U toshi -t articles_article -t articles_category -t articles_tag independently_thinking_human > django_backend/content_dump.sql";
+        echo "pg_dump -h localhost -U toshi -t articles_section -t articles_article -t articles_tag -t articles_tag_articles independently_thinking_human > django_backend/content_dump.sql";
         exit 1;
       fi
     

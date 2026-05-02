@@ -4,20 +4,19 @@ import config from '../config';
 // Use the environment-aware API URL from config.js
 const API_URL = config.api.baseUrl;
 
-// Enhanced logging function
+// Enhanced logging function (errors always; debug only in dev)
+const IS_DEV = !!(import.meta && import.meta.env && import.meta.env.DEV);
 const logApiCall = (method, endpoint, status, data = null, error = null) => {
-  const timestamp = new Date().toISOString();
-  const logPrefix = `[${timestamp}] [API ${method}] ${endpoint}`;
-  
   if (error) {
-    console.error(`${logPrefix} ERROR: ${status}`, error);
+    console.error(`[API ${method}] ${endpoint} ERROR: ${status}`, error);
     return;
   }
-  
+  if (!IS_DEV) return;
+  const logPrefix = `[API ${method}] ${endpoint}`;
   if (status >= 200 && status < 300) {
-    console.log(`${logPrefix} SUCCESS: ${status}`, data ? { dataSize: typeof data === 'object' ? Object.keys(data).length : 'non-object' } : '');
+    console.log(`${logPrefix} ${status}`);
   } else {
-    console.warn(`${logPrefix} WARNING: ${status}`, data || '');
+    console.warn(`${logPrefix} ${status}`, data || '');
   }
 };
 
@@ -37,13 +36,6 @@ export const getArticles = async (section) => {
         'Accept': 'application/json',
       }
     });
-    
-    // Log response headers for debugging
-    const headerLog = {};
-    response.headers.forEach((value, key) => {
-      headerLog[key] = value;
-    });
-    console.log(`[Headers] ${endpoint}:`, headerLog);
     
     if (!response.ok) {
       const errorText = await response.text();

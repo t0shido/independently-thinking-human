@@ -1,29 +1,7 @@
-#!/usr/bin/env python
-"""
-Script to add a new article to the local database.
-Run from django_backend directory: python add_article.py
-"""
-import os
-import sys
-import django
+from articles.models import Article
+from datetime import date
 
-# Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blog_backend.settings')
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-django.setup()
-
-from articles.models import Article, Section, Tag
-
-# Article data
-article_data = {
-    "title": "Rooted in Change",
-    "slug": "rooted-in-change",
-    "author": "Toshi",
-    "date": "2026-01-09",
-    "section": "mindset",
-    "image": "mindset/rooted_in_change.png",
-    "excerpt": "Identity is not fixed—it grows from the values we live by and adapts through life's inevitable changes.",
-    "content": """# Rooted in Change
+content = """# Rooted in Change
 
 Most people move through life with a ready-made answer to who they are. It comes quickly, without reflection, shaped by habit rather than understanding.
 
@@ -59,42 +37,18 @@ This is where a deeper, more resilient identity emerges. It is the identity of s
 
 Unlike roles, titles, or fixed identities, this way of being is not rigid. It cannot be broken when circumstances shift, because it is defined by response rather than stability. When life turns hard, the question is not who am I now. The question is what can I learn from this. Setbacks are no longer threats. They are signals. Instead of breaking or feeling lost, they adapt. They change course, refine understanding, and move forward with clarity.
 
-This identity survives life's inevitable shifts. It is flexible, resilient, and grounded in values while remaining open to change. In a universe where change is the only constant, it is the only identity that makes sense. It endures whatever life throws your way.""",
-    "tags": ["identity", "values", "growth", "mindset", "resilience"]
-}
+This identity survives life's inevitable shifts. It is flexible, resilient, and grounded in values while remaining open to change. In a universe where change is the only constant, it is the only identity that makes sense. It endures whatever life throws your way."""
 
-def add_article():
-    # Get or create section
-    section, _ = Section.objects.get_or_create(
-        slug=article_data["section"],
-        defaults={"name": article_data["section"].title()}
-    )
-    
-    # Create or update article
-    article, created = Article.objects.update_or_create(
-        slug=article_data["slug"],
-        defaults={
-            "title": article_data["title"],
-            "author": article_data["author"],
-            "date": article_data["date"],
-            "excerpt": article_data["excerpt"],
-            "content": article_data["content"],
-            "section": section,
-            "image": article_data["image"],
-        }
-    )
-    
-    # Add tags
-    for tag_name in article_data["tags"]:
-        tag, _ = Tag.objects.get_or_create(name=tag_name)
-        tag.articles.add(article)
-    
-    action = "Created" if created else "Updated"
-    print(f"✅ {action} article: {article.title}")
-    print(f"   Section: {section.name}")
-    print(f"   Slug: {article.slug}")
-    print(f"   Image: {article.image}")
-    print(f"   Tags: {', '.join(article_data['tags'])}")
+article = Article.objects.create(
+    title='Rooted in Change',
+    slug='rooted-in-change',
+    author='Toshi',
+    date=date(2026, 1, 9),
+    excerpt='Identity is not fixed—it grows from the values we live by and adapts through life\'s inevitable changes.',
+    content=content,
+    section='mindset',
+    image='mindset/rooted_in_change.png',
+    published=True
+)
 
-if __name__ == "__main__":
-    add_article()
+print(f'Successfully created article: {article.title} (ID: {article.id})')

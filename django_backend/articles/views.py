@@ -8,7 +8,6 @@ from .serializers import ArticleSerializer
 import os
 import logging
 from django.conf import settings
-from django.utils.text import slugify
 from datetime import date
 
 # Set up logger
@@ -29,15 +28,20 @@ class ArticleViewSet(viewsets.ViewSet):
         Get all articles from a specific section
         Endpoint: GET /api/articles/:section
         """
-        logger.info(f"API CALL: list articles - section={section}, user_agent={request.META.get('HTTP_USER_AGENT')}, ip={request.META.get('REMOTE_ADDR')}")
-        
+        logger.debug(f"API CALL: list articles - section={section}")
+
         if section:
             try:
                 section_obj = get_object_or_404(Section, slug=section)
-                logger.info(f"Database: Found section {section} with ID {section_obj.id}")
+                logger.debug(f"Database: Found section {section} with ID {section_obj.id}")
                 
-                articles = Article.objects.filter(section=section_obj)
-                logger.info(f"Database: Retrieved {articles.count()} articles from section {section}")
+                articles = (
+                    Article.objects
+                    .filter(section=section_obj)
+                    .select_related('section')
+                    .prefetch_related('tags')
+                )
+                logger.debug(f"Database: Retrieved articles from section {section}")
                 
                 serializer = ArticleSerializer(articles, many=True, context={'request': request})
                 return Response(serializer.data)
@@ -73,19 +77,16 @@ class ArticleViewSet(viewsets.ViewSet):
             defaults={'name': section_name.capitalize()}
         )
         
-        # Create slug from title
-        slug = slugify(title)
-        
-        # Create article
+        # Create article (model auto-generates a unique slug from title)
         article = Article.objects.create(
             title=title,
-            slug=slug,
             author=author,
             date=date.today(),
             excerpt=excerpt,
             content=content,
             section=section
         )
+        slug = article.slug
         
         # Handle image upload
         if 'image' in request.FILES:

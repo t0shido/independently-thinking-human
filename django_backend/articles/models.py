@@ -45,7 +45,14 @@ class Article(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            base_slug = slugify(self.title) or 'article'
+            slug = base_slug
+            counter = 2
+            qs = Article.objects.exclude(pk=self.pk) if self.pk else Article.objects.all()
+            while qs.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
 class Tag(models.Model):
